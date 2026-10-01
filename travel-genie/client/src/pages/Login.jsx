@@ -1,11 +1,11 @@
 import { useState } from "react";
-
-import { useNavigate, Link } from "react-router-dom";
-
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 
 function Login() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/dashboard";
 
   const { login } = useAuth();
 
@@ -15,7 +15,6 @@ function Login() {
   });
 
   const [error, setError] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -40,7 +39,7 @@ function Login() {
     try {
       await login(formData);
 
-      navigate("/dashboard", {
+      navigate(redirectUrl, {
         replace: true,
       });
     } catch (err) {
@@ -240,7 +239,7 @@ function Login() {
         <p className="mt-6 text-center text-sm text-gray-500 dark:text-white/60">
           Don't have an account?{" "}
           <Link
-            to="/signup"
+            to={redirectUrl !== "/dashboard" ? `/signup?redirect=${encodeURIComponent(redirectUrl)}` : "/signup"}
             className="
               font-semibold
               text-cyan-500

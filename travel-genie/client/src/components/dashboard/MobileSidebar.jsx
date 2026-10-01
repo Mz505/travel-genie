@@ -37,7 +37,7 @@ function MobileSidebar({ close }) {
           w-[264px]
         "
       >
-        <Sidebar />
+        <Sidebar close={close} />
 
         <button
           type="button"

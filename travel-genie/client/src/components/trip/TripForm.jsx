@@ -269,7 +269,7 @@ export default function TripForm() {
                 name="travelStyle"
                 value={formData.travelStyle}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-[#111827] dark:text-white"
+                className="w-full rounded-xl border border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-[#111827] dark:text-white cursor-pointer [&>option]:bg-white [&>option]:text-gray-900"
               >
                 <option value="">Select Travel Style</option>
 
@@ -296,7 +296,7 @@ export default function TripForm() {
                 name="travelers"
                 value={formData.travelers}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-[#111827] dark:text-white"
+                className="w-full rounded-xl border border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-[#111827] dark:text-white cursor-pointer [&>option]:bg-white [&>option]:text-gray-900"
               >
                 <option value="1">1 Traveler</option>
 

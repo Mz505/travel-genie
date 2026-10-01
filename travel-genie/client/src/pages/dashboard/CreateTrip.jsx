@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import {
   ArrowLeft,
@@ -30,18 +29,51 @@ function getTodayLocal() {
 
 function CreateTrip() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const paramDestination = searchParams.get("destination") || "";
+  const paramOrigin = searchParams.get("origin") || "";
+  const paramStartDate = searchParams.get("startDate") || "";
+  const paramTravelers = searchParams.get("travelers") || "";
+  const paramBudget = searchParams.get("budget") || "";
 
   const { addTrip } = useTrips();
 
   const [formData, setFormData] = useState({
-    origin: "",
-    destination: "",
-    budget: "",
-    travelers: "",
+    origin: paramOrigin,
+    destination: paramDestination,
+    budget: paramBudget,
+    travelers: paramTravelers,
     travelStyle: "",
-    startDate: "",
-    endDate: "",
+    startDate: paramStartDate,
+    endDate: paramStartDate
+      ? (() => {
+          const d = new Date(paramStartDate);
+          d.setDate(d.getDate() + 5);
+          return d.toISOString().split("T")[0];
+        })()
+      : "",
   });
+
+  useEffect(() => {
+    if (paramDestination || paramStartDate || paramTravelers || paramOrigin || paramBudget) {
+      setFormData((current) => ({
+        ...current,
+        origin: paramOrigin || current.origin,
+        destination: paramDestination || current.destination,
+        budget: paramBudget || current.budget,
+        travelers: paramTravelers || current.travelers,
+        startDate: paramStartDate || current.startDate,
+        endDate: paramStartDate
+          ? (() => {
+              const d = new Date(paramStartDate);
+              d.setDate(d.getDate() + 5);
+              return d.toISOString().split("T")[0];
+            })()
+          : current.endDate,
+      }));
+    }
+  }, [paramDestination, paramOrigin, paramStartDate, paramTravelers, paramBudget]);
 
   const [error, setError] = useState("");
 

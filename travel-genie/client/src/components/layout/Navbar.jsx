@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard, Plane } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeSwitcher from "../Common/ThemeSwitcher";
+import CurrencyAndLangSwitcher from "../Common/CurrencyAndLangSwitcher";
+import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    closeMenu();
+    logout();
+    navigate("/login");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,15 +80,16 @@ function Navbar() {
     >
       <div
         className="
-          max-w-7xl
-          mx-auto
+          w-full
           h-20
-          px-5
-          sm:px-10
-          lg:px-20
+          px-4
+          sm:px-6
+          lg:px-8
+          xl:px-10
           flex
           items-center
           justify-between
+          gap-4
         "
       >
         {/* ==================================================
@@ -95,6 +105,8 @@ function Navbar() {
             text-gray-900
             dark:text-white
             transition-colors
+            shrink-0
+            whitespace-nowrap
           "
         >
           Travel
@@ -110,16 +122,59 @@ function Navbar() {
             hidden
             lg:flex
             items-center
-            gap-10
+            gap-3
+            xl:gap-5
+            2xl:gap-7
+            text-xs
+            xl:text-sm
+            font-medium
             text-gray-700
             dark:text-gray-300
+            whitespace-nowrap
           "
         >
+          <Link
+            to="/flights"
+            className="
+              whitespace-nowrap
+              inline-flex
+              items-center
+              gap-1.5
+              px-2.5
+              xl:px-3
+              py-1.5
+              rounded-full
+              bg-amber-500/10
+              border
+              border-amber-500/25
+              text-amber-500
+              hover:text-amber-400
+              hover:bg-amber-500/20
+              font-semibold
+              transition-all
+            "
+          >
+            <Plane size={15} />
+            <span><span className="hidden xl:inline">Kam Air </span>Flights</span>
+          </Link>
+
+          <Link
+            to="/kam-air"
+            className="
+              whitespace-nowrap
+              hover:text-cyan-500
+              transition-colors
+            "
+          >
+            <span className="hidden xl:inline">Kam Air </span>Directory
+          </Link>
+
           <a
             href="/#guide"
             className="
+              whitespace-nowrap
               hover:text-cyan-500
-              transition
+              transition-colors
             "
           >
             Guide
@@ -128,8 +183,9 @@ function Navbar() {
           <a
             href="/#destinations"
             className="
+              whitespace-nowrap
               hover:text-cyan-500
-              transition
+              transition-colors
             "
           >
             Destinations
@@ -138,8 +194,9 @@ function Navbar() {
           <a
             href="/#features"
             className="
+              whitespace-nowrap
               hover:text-cyan-500
-              transition
+              transition-colors
             "
           >
             Features
@@ -148,8 +205,9 @@ function Navbar() {
           <a
             href="/#about"
             className="
+              whitespace-nowrap
               hover:text-cyan-500
-              transition
+              transition-colors
             "
           >
             About
@@ -165,43 +223,109 @@ function Navbar() {
             hidden
             lg:flex
             items-center
-            gap-4
+            gap-2.5
+            xl:gap-3
+            shrink-0
+            whitespace-nowrap
           "
         >
+          <CurrencyAndLangSwitcher />
           <ThemeSwitcher />
 
-          <Link
-            to="/login"
-            className="
-              px-5
-              py-2
-              rounded-full
-              text-gray-700
-              dark:text-gray-200
-              hover:text-cyan-500
-              transition
-            "
-          >
-            Login
-          </Link>
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="
+                  whitespace-nowrap
+                  flex
+                  items-center
+                  gap-2
+                  px-4
+                  xl:px-5
+                  py-2.5
+                  rounded-full
+                  bg-cyan-500/10
+                  text-cyan-600
+                  dark:text-cyan-400
+                  font-semibold
+                  text-sm
+                  hover:bg-cyan-500/20
+                  transition
+                "
+              >
+                <LayoutDashboard size={17} />
+                <span>Dashboard</span>
+              </Link>
 
-          <button
-            type="button"
-            onClick={handleGetStarted}
-            className="
-              px-6
-              py-3
-              rounded-full
-              bg-cyan-500
-              text-white
-              font-semibold
-              hover:bg-cyan-400
-              hover:scale-105
-              transition
-            "
-          >
-            Get Started
-          </button>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="
+                  whitespace-nowrap
+                  flex
+                  items-center
+                  gap-2
+                  px-4
+                  xl:px-5
+                  py-2.5
+                  rounded-full
+                  border
+                  border-red-500/20
+                  text-red-500
+                  hover:bg-red-500/10
+                  font-semibold
+                  text-sm
+                  transition
+                "
+              >
+                <LogOut size={16} />
+                <span>Log Out</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="
+                  whitespace-nowrap
+                  px-3
+                  xl:px-4
+                  py-2
+                  rounded-full
+                  text-sm
+                  font-medium
+                  text-gray-700
+                  dark:text-gray-200
+                  hover:text-cyan-500
+                  transition
+                "
+              >
+                Login
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleGetStarted}
+                className="
+                  whitespace-nowrap
+                  px-4
+                  xl:px-5
+                  py-2.5
+                  rounded-full
+                  bg-cyan-500
+                  text-white
+                  text-sm
+                  font-semibold
+                  hover:bg-cyan-400
+                  hover:scale-105
+                  transition
+                "
+              >
+                Get Started
+              </button>
+            </>
+          )}
         </div>
 
         {/* ==================================================
@@ -212,10 +336,11 @@ function Navbar() {
           className="
             flex
             items-center
-            gap-3
+            gap-2
             lg:hidden
           "
         >
+          <CurrencyAndLangSwitcher />
           <ThemeSwitcher />
 
           <button
@@ -270,6 +395,34 @@ function Navbar() {
               dark:text-gray-200
             "
           >
+            <Link
+              to="/flights"
+              onClick={closeMenu}
+              className="
+                flex
+                items-center
+                gap-2
+                font-semibold
+                text-amber-500
+                hover:text-amber-400
+                transition
+              "
+            >
+              <Plane size={18} />
+              <span>Kam Air Flights</span>
+            </Link>
+
+            <Link
+              to="/kam-air"
+              onClick={closeMenu}
+              className="
+                hover:text-cyan-500
+                transition
+              "
+            >
+              Kam Air Directory
+            </Link>
+
             {/* Guide */}
 
             <a
@@ -322,43 +475,90 @@ function Navbar() {
               About
             </a>
 
-            {/* Login */}
+            {user ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  onClick={closeMenu}
+                  className="
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                    text-center
+                    rounded-full
+                    bg-cyan-500/10
+                    text-cyan-600
+                    dark:text-cyan-400
+                    py-3
+                    font-semibold
+                    transition
+                  "
+                >
+                  <LayoutDashboard size={18} />
+                  <span>Dashboard</span>
+                </Link>
 
-            <Link
-              to="/login"
-              onClick={closeMenu}
-              className="
-                text-center
-                rounded-full
-                border
-                border-gray-200
-                dark:border-white/10
-                py-3
-                font-medium
-                hover:text-cyan-500
-                transition
-              "
-            >
-              Login
-            </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                    w-full
+                    rounded-full
+                    border
+                    border-red-500/20
+                    text-red-500
+                    hover:bg-red-500/10
+                    py-3
+                    font-semibold
+                    transition
+                  "
+                >
+                  <LogOut size={18} />
+                  <span>Log Out</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="
+                    text-center
+                    rounded-full
+                    border
+                    border-gray-200
+                    dark:border-white/10
+                    py-3
+                    font-medium
+                    hover:text-cyan-500
+                    transition
+                  "
+                >
+                  Login
+                </Link>
 
-            {/* Get Started */}
-
-            <button
-              type="button"
-              onClick={handleGetStarted}
-              className="
-                rounded-full
-                bg-cyan-500
-                py-3
-                text-white
-                font-semibold
-                hover:bg-cyan-400
-                transition
-              "
-            >
-              Get Started
-            </button>
+                <button
+                  type="button"
+                  onClick={handleGetStarted}
+                  className="
+                    rounded-full
+                    bg-cyan-500
+                    py-3
+                    text-white
+                    font-semibold
+                    hover:bg-cyan-400
+                    transition
+                  "
+                >
+                  Get Started
+                </button>
+              </>
+            )}
           </div>
         </motion.div>
       )}

@@ -278,6 +278,9 @@ function EditTrip() {
                 p-4
                 text-gray-900
                 dark:text-white
+                cursor-pointer
+                [&>option]:bg-white
+                [&>option]:text-gray-900
               "
             >
               <option value="">Select Style</option>

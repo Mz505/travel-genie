@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 
 export default function Signup() {
   const { register, login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/dashboard";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -45,7 +47,7 @@ await login({
   password: password,
 });
 
-navigate("/dashboard");
+navigate(redirectUrl);
 
     } catch (err) {
       console.error("Signup error:", err);
@@ -146,7 +148,7 @@ navigate("/dashboard");
         <p className="mt-6 text-center text-sm text-gray-500 dark:text-white/60">
           Already have an account?{" "}
           <Link
-            to="/login"
+            to={redirectUrl !== "/dashboard" ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : "/login"}
             className="font-semibold text-cyan-500 transition hover:text-cyan-400"
           >
             Login

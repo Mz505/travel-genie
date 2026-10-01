@@ -1,3 +1,2 @@
-import { createContext } from "react";
-
-export const TripContext = createContext();
+export * from "./TripContext.jsx";
+export { default } from "./TripContext.jsx";

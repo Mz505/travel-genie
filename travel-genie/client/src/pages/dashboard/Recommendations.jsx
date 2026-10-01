@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import {
   MapPin,
@@ -11,6 +12,8 @@ import {
   Wallet,
   CalendarDays,
   RefreshCw,
+  Plane,
+  CheckCircle2,
 } from "lucide-react";
 
 import GlassCard from "../../components/Common/GlassCard";
@@ -18,12 +21,63 @@ import { useTrips } from "../../context/TripContext.jsx";
 import { generateAIResponse } from "../../services/ai";
 
 function Recommendations() {
-  const { trips, loading, updateTrip } = useTrips();
+  const { trips, loading, updateTrip, addTrip } = useTrips();
+  const [searchParams] = useSearchParams();
+
+  const paramDestination = searchParams.get("destination");
+  const paramOrigin = searchParams.get("origin");
+  const paramFlightNo = searchParams.get("flightNo");
+  const paramCabin = searchParams.get("cabin");
+  const paramStartDate = searchParams.get("startDate");
 
   const [selectedTripId, setSelectedTripId] = useState("");
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [recommendationsLoading, setRecommendationsLoading] = useState(false);
   const [recommendationsError, setRecommendationsError] = useState("");
+  const [creatingFromFlight, setCreatingFromFlight] = useState(false);
+
+  // Auto-select trip if matching destination exists
+  useEffect(() => {
+    if (paramDestination && trips.length > 0 && !selectedTripId) {
+      const match = trips.find(
+        (t) =>
+          t.destination?.toLowerCase().includes(paramDestination.toLowerCase()) ||
+          paramDestination.toLowerCase().includes(t.destination?.toLowerCase())
+      );
+      if (match) {
+        setSelectedTripId(match.id);
+      }
+    }
+  }, [paramDestination, trips, selectedTripId]);
+
+  const handleCreateTripFromFlight = async () => {
+    if (!paramDestination) return;
+    try {
+      setCreatingFromFlight(true);
+      const newTripData = {
+        title: `Trip to ${paramDestination} (${paramFlightNo || "Kam Air"})`,
+        destination: paramDestination,
+        origin: paramOrigin || "Kabul",
+        start_date: paramStartDate || new Date().toISOString().split("T")[0],
+        end_date: (() => {
+          const d = new Date(paramStartDate || new Date());
+          d.setDate(d.getDate() + 5);
+          return d.toISOString().split("T")[0];
+        })(),
+        travelers: 1,
+        budget: 1500,
+        notes: `Booked / planned with Kam Air flight ${paramFlightNo || ""}`,
+      };
+      const created = await addTrip(newTripData);
+      if (created?.id) {
+        setSelectedTripId(created.id);
+      }
+    } catch (err) {
+      console.error("Failed to auto-create trip from flight:", err);
+    } finally {
+      setCreatingFromFlight(false);
+    }
+  };
 
   const interests = [
     "History",
@@ -96,11 +150,27 @@ function Recommendations() {
           ? selectedInterests.join(", ")
           : "General travel, popular attractions, local experiences, food, and culture";
 
+      const isKamAirRoute =
+        Boolean(paramFlightNo) ||
+        (selectedTrip.notes && selectedTrip.notes.includes("Kam Air")) ||
+        ["dubai", "istanbul", "delhi", "jeddah", "tashkent", "kabul", "herat", "mazar-i-sharif"].some(
+          (city) => selectedTrip.destination?.toLowerCase().includes(city)
+        );
+
+      const kamAirGuidance = isKamAirRoute
+        ? `
+KAM AIR AFGHAN TRAVELER CONTEXT:
+This trip connects via Kam Air (${paramFlightNo ? `flight ${paramFlightNo}` : "scheduled direct route"}).
+- Under "tips": Provide actionable advice for departure from Kabul International Airport (check-in 3h prior, passport validity 6+ months, baggage handling of 30kg checked + 7kg cabin), airport arrival terminal advice at ${selectedTrip.destination}, currency exchange (USD/AFN/local currency), and trusted transport.
+- Under "food": Ensure halal dining and Afghan-friendly recommendations are highlighted.
+`
+        : "";
+
       const prompt = `
 You are TravelGenie, a personalized travel recommendation AI.
 
 Your job is to create UNIQUE recommendations specifically for this user's trip.
-
+${kamAirGuidance}
 TRIP INFORMATION:
 
 Destination: ${selectedTrip.destination}
@@ -439,6 +509,53 @@ console.log("AI PROMPT:", prompt);
           </p>
         </div>
 
+        {/* KAM AIR FLIGHT CONTEXT BANNER */}
+        {paramDestination && (
+          <div className="mb-5 p-5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/30 backdrop-blur-xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-500 shrink-0 mt-0.5">
+                  <Plane size={20} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400">
+                      Kam Air Flight Context
+                    </span>
+                    {paramFlightNo && (
+                      <span className="text-xs font-semibold text-slate-300">
+                        Flight {paramFlightNo}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-base font-bold text-white mt-1">
+                    Route: {paramOrigin || "Kabul"} → {paramDestination}
+                  </h3>
+                  <p className="text-xs text-white/70">
+                    Departure date: {paramStartDate || "Upcoming"} • AI advice tuned for Kabul Airport security & destination arrival
+                  </p>
+                </div>
+              </div>
+
+              {!selectedTrip && (
+                <button
+                  type="button"
+                  onClick={handleCreateTripFromFlight}
+                  disabled={creatingFromFlight}
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-2 shrink-0 disabled:opacity-50"
+                >
+                  {creatingFromFlight ? (
+                    <RefreshCw size={14} className="animate-spin" />
+                  ) : (
+                    <Sparkles size={14} />
+                  )}
+                  <span>Create Trip & Start Planning</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {trips.length === 0 ? (
           <GlassCard className="p-6">
             <div className="flex flex-col items-center justify-center text-center">
@@ -486,9 +603,12 @@ console.log("AI PROMPT:", prompt);
                   focus:ring-2
                   focus:ring-cyan-500
                   transition
+                  cursor-pointer
+                  [&>option]:bg-white
+                  [&>option]:text-gray-900
                 "
               >
-                <option value="" className="text-gray-900">
+                <option value="" className="bg-white text-gray-900">
                   Select a trip...
                 </option>
 
@@ -496,7 +616,7 @@ console.log("AI PROMPT:", prompt);
                   <option
                     key={trip.id}
                     value={trip.id}
-                    className="text-gray-900"
+                    className="bg-white text-gray-900"
                   >
                     {trip.title || trip.destination} — {trip.destination}
                   </option>

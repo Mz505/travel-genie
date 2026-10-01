@@ -1,46 +1,50 @@
 import { motion } from "framer-motion";
-
-import { Sparkles, Wallet, Map, Camera } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Sparkles, Wallet, Map, Camera, ArrowRight } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 const features = [
   {
     icon: Sparkles,
-
     title: "AI Trip Planning",
-
+    path: "/dashboard/trips/create",
     description:
       "Create personalized travel itineraries with artificial intelligence based on your destination, style, and preferences.",
   },
-
   {
     icon: Wallet,
-
     title: "Smart Budget Management",
-
+    path: "/dashboard/budget",
     description:
       "Plan your expenses, estimate costs, and keep your journey within your ideal budget.",
   },
-
   {
     icon: Map,
-
     title: "Smart Recommendations",
-
+    path: "/dashboard/recommendations",
     description:
       "Discover hidden places, activities, and experiences recommended specially for you.",
   },
-
   {
     icon: Camera,
-
     title: "Travel Memories",
-
+    path: "/dashboard/memory",
     description:
       "Save your favorite moments, photos, and experiences to remember every adventure.",
   },
 ];
 
 function Features() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleFeatureClick = (path) => {
+    if (user) {
+      navigate(path);
+    } else {
+      navigate(`/signup?redirect=${encodeURIComponent(path)}`);
+    }
+  };
   return (
     <section
       id="features"
@@ -259,92 +263,74 @@ gap-6
                 whileHover={{
                   y: -10,
                 }}
+                onClick={() => handleFeatureClick(feature.path)}
                 className="
-group
-
-rounded-3xl
-
-border
-
-border-gray-100
-
-dark:border-white/10
-
-bg-white
-
-dark:bg-[#111827]
-
-p-7
-
-shadow-lg
-
-hover:shadow-2xl
-
-transition-all
-
-duration-300
-
-"
+                  group
+                  cursor-pointer
+                  rounded-3xl
+                  border
+                  border-gray-100
+                  dark:border-white/10
+                  bg-white
+                  dark:bg-[#111827]
+                  p-7
+                  shadow-lg
+                  hover:shadow-2xl
+                  transition-all
+                  duration-300
+                  flex
+                  flex-col
+                  justify-between
+                "
               >
-                <div
-                  className="
-h-14
+                <div>
+                  <div
+                    className="
+                      h-14
+                      w-14
+                      rounded-2xl
+                      flex
+                      items-center
+                      justify-center
+                      bg-cyan-100
+                      dark:bg-cyan-500/10
+                      text-cyan-600
+                      dark:text-cyan-300
+                      group-hover:scale-110
+                      transition
+                    "
+                  >
+                    <Icon size={28} />
+                  </div>
 
-w-14
+                  <h3
+                    className="
+                      mt-6
+                      text-xl
+                      font-bold
+                      text-gray-900
+                      dark:text-white
+                    "
+                  >
+                    {feature.title}
+                  </h3>
 
-rounded-2xl
-
-flex
-
-items-center
-
-justify-center
-
-bg-cyan-100
-
-dark:bg-cyan-500/10
-
-text-cyan-600
-
-dark:text-cyan-300
-
-group-hover:scale-110
-
-transition
-"
-                >
-                  <Icon size={28} />
+                  <p
+                    className="
+                      mt-3
+                      leading-7
+                      text-gray-600
+                      dark:text-gray-300
+                    "
+                  >
+                    {feature.description}
+                  </p>
                 </div>
 
-                <h3
-                  className="
-mt-6
-
-text-xl
-
-font-bold
-
-text-gray-900
-
-dark:text-white
-"
-                >
-                  {feature.title}
-                </h3>
-
-                <p
-                  className="
-mt-3
-
-leading-7
-
-text-gray-600
-
-dark:text-gray-300
-"
-                >
-                  {feature.description}
-                </p>
+                <div className="mt-5 flex items-center gap-1.5 text-xs font-semibold text-cyan-600 dark:text-cyan-400 group-hover:translate-x-1 transition-transform">
+                  <span>Explore feature</span>
+                  <ArrowRight size={14} />
+                </div>
               </motion.div>
             );
           })}

@@ -447,6 +447,9 @@ function Memories() {
                     dark:border-white/10
                     dark:bg-white/5
                     dark:text-white
+                    cursor-pointer
+                    [&>option]:bg-white
+                    [&>option]:text-gray-900
                   "
                 >
                   <option value="">Select a trip</option>

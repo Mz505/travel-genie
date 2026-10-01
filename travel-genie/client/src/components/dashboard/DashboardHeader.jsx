@@ -1,28 +1,76 @@
-import { useState } from "react";
-
-import { Search, Crown, Menu } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Search,
+  Crown,
+  Menu,
+  User,
+  Settings,
+  LogOut,
+  ShieldCheck,
+  ChevronDown,
+  BarChart3,
+  Plane,
+} from "lucide-react";
 
 import ThemeSwitcher from "../Common/ThemeSwitcher";
+import CurrencyAndLangSwitcher from "../Common/CurrencyAndLangSwitcher";
+import { useAuth } from "../../context/AuthContext";
 
 function DashboardHeader({ openSidebar }) {
   const [search, setSearch] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    setMenuOpen(false);
+    logout();
+    navigate("/login");
+  };
+
+  const username =
+    user?.username ||
+    user?.profile?.user?.username ||
+    user?.email?.split("@")[0] ||
+    "Explorer";
+
+  const email = user?.email || user?.profile?.user?.email || "";
+  const initial = (username.charAt(0) || "U").toUpperCase();
+  const isAdmin = Boolean(user?.is_staff || user?.is_superuser);
+
+  const profileImage = user?.profile?.profile_image;
+  const avatarUrl = profileImage
+    ? profileImage.startsWith("http")
+      ? profileImage
+      : `https://travelgenie-backend-fcvw.onrender.com${profileImage}`
+    : null;
 
   return (
     <header
       className="
         w-full
-
         flex
-
         items-center
-
         gap-4
-
         mb-8
-
         flex-wrap
-
         lg:flex-nowrap
+        relative
+        z-30
       "
     >
       {/* Mobile Menu */}
@@ -30,27 +78,27 @@ function DashboardHeader({ openSidebar }) {
         type="button"
         onClick={openSidebar}
         className="
-    lg:hidden
-    h-11
-    w-11
-    shrink-0
-    rounded-xl
-    flex
-    items-center
-    justify-center
-    bg-white/70
-    dark:bg-white/10
-    border
-    border-gray-200
-    dark:border-white/10
-    text-gray-800
-    dark:text-white
-    backdrop-blur-xl
-    hover:bg-gray-100
-    dark:hover:bg-white/20
-    transition-all
-    duration-300
-  "
+          lg:hidden
+          h-11
+          w-11
+          shrink-0
+          rounded-xl
+          flex
+          items-center
+          justify-center
+          bg-white/70
+          dark:bg-white/10
+          border
+          border-gray-200
+          dark:border-white/10
+          text-gray-800
+          dark:text-white
+          backdrop-blur-xl
+          hover:bg-gray-100
+          dark:hover:bg-white/20
+          transition-all
+          duration-300
+        "
         aria-label="Open sidebar"
       >
         <Menu size={22} />
@@ -62,47 +110,28 @@ function DashboardHeader({ openSidebar }) {
           flex
           items-center
           gap-2
-
           rounded-2xl
-
           px-5
           py-3
-
           bg-gradient-to-r
           from-cyan-500
           to-blue-600
-
           text-white
           text-sm
           font-medium
-
           shadow-lg
-
           transition-all
           duration-300
-
           hover:scale-105
         "
       >
         <Crown size={18} />
-
         <span className="hidden sm:block">Upgrade Pro</span>
       </button>
 
       {/* Search */}
-      <div
-        className="
-          flex-1
-
-          min-w-[220px]
-        "
-      >
-        <div
-          className="
-            relative
-            w-full
-          "
-        >
+      <div className="flex-1 min-w-[220px]">
+        <div className="relative w-full">
           <Search
             size={20}
             className="
@@ -110,10 +139,8 @@ function DashboardHeader({ openSidebar }) {
               left-5
               top-1/2
               -translate-y-1/2
-
               text-gray-500
               dark:text-white
-
               z-10
             "
           />
@@ -125,36 +152,24 @@ function DashboardHeader({ openSidebar }) {
             placeholder="Search destinations, trips, memories..."
             className="
               w-full
-
               rounded-2xl
-
               px-5
               py-3
-
               pl-12
-
               text-sm
-
               bg-white/70
               dark:bg-white/10
-
               border
               border-gray-200
               dark:border-white/10
-
               text-gray-800
               dark:text-white
-
               placeholder:text-gray-400
               dark:placeholder:text-white/50
-
               backdrop-blur-xl
-
               outline-none
-
               transition-all
               duration-300
-
               focus:ring-2
               focus:ring-cyan-400
             "
@@ -162,42 +177,241 @@ function DashboardHeader({ openSidebar }) {
         </div>
       </div>
 
+      {/* Language & Currency */}
+      <CurrencyAndLangSwitcher />
+
       {/* Theme */}
       <ThemeSwitcher />
 
-      {/* Profile */}
-      <button
-        className="
-          h-11
-          w-11
+      {/* User Profile Dropdown */}
+      <div className="relative" ref={dropdownRef}>
+        <button
+          type="button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="
+            flex
+            items-center
+            gap-2
+            p-1
+            pr-3
+            rounded-full
+            bg-white/70
+            dark:bg-white/10
+            border
+            border-gray-200
+            dark:border-white/10
+            backdrop-blur-xl
+            hover:border-cyan-400
+            transition-all
+            duration-300
+            shadow-sm
+          "
+        >
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={username}
+              className="h-9 w-9 rounded-full object-cover"
+            />
+          ) : (
+            <div
+              className="
+                h-9
+                w-9
+                rounded-full
+                flex
+                items-center
+                justify-center
+                bg-gradient-to-r
+                from-cyan-500
+                to-blue-600
+                text-white
+                text-sm
+                font-bold
+                shadow-md
+              "
+            >
+              {initial}
+            </div>
+          )}
+          <span className="hidden md:block text-sm font-semibold text-gray-800 dark:text-white max-w-[100px] truncate">
+            {username}
+          </span>
+          <ChevronDown
+            size={16}
+            className={`text-gray-500 dark:text-gray-300 transition-transform duration-200 ${
+              menuOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
-          shrink-0
+        {/* Dropdown Menu */}
+        {menuOpen && (
+          <div
+            className="
+              absolute
+              right-0
+              mt-2
+              w-64
+              rounded-2xl
+              bg-white/95
+              dark:bg-[#071625]/95
+              backdrop-blur-2xl
+              border
+              border-gray-200
+              dark:border-white/10
+              shadow-2xl
+              p-2
+              z-50
+              animate-in
+              fade-in
+              slide-in-from-top-2
+              duration-200
+            "
+          >
+            {/* User Info Header */}
+            <div className="px-3 py-2.5 border-b border-gray-100 dark:border-white/10">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
+                  {username}
+                </p>
+                {isAdmin && (
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                    Admin
+                  </span>
+                )}
+              </div>
+              {email && (
+                <p className="text-xs text-gray-500 dark:text-white/60 truncate mt-0.5">
+                  {email}
+                </p>
+              )}
+            </div>
 
-          rounded-full
+            {/* Menu Items */}
+            <div className="py-1">
+              {isAdmin && (
+                <a
+                  href="http://127.0.0.1:8000/admin/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className="
+                    flex
+                    items-center
+                    gap-2.5
+                    px-3
+                    py-2.5
+                    rounded-xl
+                    text-sm
+                    text-cyan-600
+                    dark:text-cyan-400
+                    hover:bg-cyan-500/10
+                    transition-colors
+                  "
+                >
+                  <ShieldCheck size={17} />
+                  <span>Django Admin</span>
+                </a>
+              )}
 
-          flex
-          items-center
-          justify-center
+              {isAdmin && (
+                <Link
+                  to="/dashboard/kam-air-analytics"
+                  onClick={() => setMenuOpen(false)}
+                  className="
+                    flex
+                    items-center
+                    gap-2.5
+                    px-3
+                    py-2.5
+                    rounded-xl
+                    text-sm
+                    text-amber-600
+                    dark:text-amber-400
+                    hover:bg-amber-500/10
+                    transition-colors
+                  "
+                >
+                  <BarChart3 size={17} />
+                  <span>Kam Air Analytics</span>
+                </Link>
+              )}
 
-          bg-gradient-to-r
-          from-cyan-500
-          to-blue-600
+              <Link
+                to="/dashboard/profile"
+                onClick={() => setMenuOpen(false)}
+                className="
+                  flex
+                  items-center
+                  gap-2.5
+                  px-3
+                  py-2.5
+                  rounded-xl
+                  text-sm
+                  text-gray-700
+                  dark:text-white/80
+                  hover:bg-gray-100
+                  dark:hover:bg-white/10
+                  transition-colors
+                "
+              >
+                <User size={17} />
+                <span>My Profile</span>
+              </Link>
 
-          text-white
+              <Link
+                to="/dashboard/settings"
+                onClick={() => setMenuOpen(false)}
+                className="
+                  flex
+                  items-center
+                  gap-2.5
+                  px-3
+                  py-2.5
+                  rounded-xl
+                  text-sm
+                  text-gray-700
+                  dark:text-white/80
+                  hover:bg-gray-100
+                  dark:hover:bg-white/10
+                  transition-colors
+                "
+              >
+                <Settings size={17} />
+                <span>Settings</span>
+              </Link>
+            </div>
 
-          text-sm
-          font-bold
-
-          shadow-lg
-
-          transition-all
-          duration-300
-
-          hover:scale-110
-        "
-      >
-        A
-      </button>
+            {/* Logout Divider */}
+            <div className="border-t border-gray-100 dark:border-white/10 pt-1">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="
+                  w-full
+                  flex
+                  items-center
+                  gap-2.5
+                  px-3
+                  py-2.5
+                  rounded-xl
+                  text-sm
+                  font-medium
+                  text-red-500
+                  hover:bg-red-500/10
+                  dark:text-red-400
+                  dark:hover:bg-red-500/10
+                  transition-colors
+                "
+              >
+                <LogOut size={17} />
+                <span>Log Out</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </header>
   );
 }

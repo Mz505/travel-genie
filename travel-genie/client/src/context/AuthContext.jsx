@@ -16,14 +16,16 @@ export function AuthProvider({ children }) {
   // Load the user's profile using the saved JWT token
   const loadUser = async () => {
     const token = localStorage.getItem("access");
+    const refreshToken = localStorage.getItem("refresh");
 
-    if (!token) {
+    if (!token && !refreshToken) {
       setUser(null);
       setAuthLoading(false);
       return;
     }
 
     try {
+      setAuthLoading(true);
       const profile = await getProfile();
 
       setUser({
@@ -33,6 +35,8 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.error("Error loading user profile:", error);
       setUser(null);
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
     } finally {
       setAuthLoading(false);
     }
@@ -66,7 +70,7 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     const response = await axios.post(
-      "https://travelgenie-backend-fcvw.onrender.com/api/users/register/",
+      `${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/users/register/`,
       userData,
     );
 

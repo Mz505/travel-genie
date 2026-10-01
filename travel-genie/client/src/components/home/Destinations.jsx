@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
 ArrowUpRight,
 MapPin,
@@ -9,6 +10,7 @@ import japanImage from "../../assets/images/destinations/japan.jpg";
 import turkeyImage from "../../assets/images/destinations/turkey.jpg";
 import italyImage from "../../assets/images/destinations/italy.jpg";
 import switzerlandImage from "../../assets/images/destinations/switzerland.jpg";
+import { useAuth } from "../../context/AuthContext";
 
 const destinations = [
 {
@@ -46,7 +48,20 @@ image: switzerlandImage,
 ];
 
 function Destinations() {
-return (
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleDestinationClick = (dest) => {
+    if (dest.name === "Istanbul") {
+      navigate(`/flights?origin=KBL&destination=IST`);
+    } else if (user) {
+      navigate(`/dashboard/trips/create?destination=${encodeURIComponent(dest.name)}`);
+    } else {
+      navigate(`/signup?redirect=${encodeURIComponent(`/dashboard/trips/create?destination=${dest.name}`)}`);
+    }
+  };
+
+  return (
 <section
 id="destinations"
 className="
@@ -324,29 +339,20 @@ overflow-hidden
           whileHover={{
             y: -8,
           }}
+          onClick={() => handleDestinationClick(destination)}
           className="
             group
-
+            cursor-pointer
             overflow-hidden
-
             rounded-[28px]
-
             border
-
             border-white/60
-
             bg-white
-
             shadow-sm
-
             transition
-
             duration-300
-
             hover:shadow-2xl
-
             dark:border-white/10
-
             dark:bg-[#111E2D]
           "
         >

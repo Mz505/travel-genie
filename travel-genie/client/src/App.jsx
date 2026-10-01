@@ -18,6 +18,9 @@ import CreateTrip from "./pages/dashboard/CreateTrip";
 import Budget from "./pages/dashboard/Budget";
 import Recommendations from "./pages/dashboard/Recommendations";
 import Memory from "./pages/dashboard/Memory";
+import FlightSearchPage from "./pages/flights/FlightSearchPage";
+import KamAirInfo from "./pages/flights/KamAirInfo";
+import KamAirAnalytics from "./pages/dashboard/KamAirAnalytics";
 
 function App() {
   return (
@@ -28,6 +31,10 @@ function App() {
       <Route path="/login" element={<Login />} />
 
       <Route path="/signup" element={<Signup />} />
+
+      <Route path="/flights" element={<FlightSearchPage />} />
+
+      <Route path="/kam-air" element={<KamAirInfo />} />
 
       {/* Protected Dashboard */}
       <Route
@@ -51,6 +58,12 @@ function App() {
 
         {/* Dynamic trip details */}
         <Route path="trips/:id" element={<TripDetails />} />
+
+        {/* Kam Air Flight Booking in Dashboard */}
+        <Route path="flights" element={<FlightSearchPage />} />
+
+        {/* Kam Air Executive Analytics (Superuser/Staff) */}
+        <Route path="kam-air-analytics" element={<KamAirAnalytics />} />
 
         <Route path="budget" element={<Budget />} />
         <Route path="recommendations" element={<Recommendations />} />

@@ -16,9 +16,14 @@ import {
   Map,
   CheckCircle2,
   Loader2,
+  LogOut,
+  ShieldCheck,
+  AlertCircle,
+  RotateCcw,
 } from "lucide-react";
 
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { getProfile } from "../../api/profile";
@@ -27,8 +32,16 @@ import { useTrips } from "../../context/TripContext.jsx";
 import GlassCard from "../../components/Common/GlassCard";
 
 function Profile() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { trips, loading } = useTrips();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const isAdmin = Boolean(user?.is_staff || user?.is_superuser);
 
   const [profile, setProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -58,33 +71,37 @@ function Profile() {
   // LOAD PROFILE
   // ======================================================
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        setProfileLoading(true);
-        setProfileError("");
+  const loadProfile = useCallback(async () => {
+    try {
+      setProfileLoading(true);
+      setProfileError("");
 
-        const data = await getProfile();
+      const data = await getProfile();
 
-        setProfile(data);
+      setProfile(data);
 
-        setBio(data?.bio || "");
-        setTravelStyle(data?.travel_style || "");
-        setFavoriteDestination(data?.favorite_destination || "");
+      setBio(data?.bio || "");
+      setTravelStyle(data?.travel_style || "");
+      setFavoriteDestination(data?.favorite_destination || "");
 
-        if (data?.profile_image) {
-          setImagePreview(data.profile_image);
-        }
-      } catch (error) {
-        console.error("Failed to load profile:", error);
-        setProfileError("Unable to load your profile.");
-      } finally {
-        setProfileLoading(false);
+      if (data?.profile_image) {
+        setImagePreview(data.profile_image);
       }
-    };
-
-    loadProfile();
+    } catch (error) {
+      console.error("Failed to load profile:", error);
+      const detail =
+        error?.response?.data?.detail ||
+        error?.message ||
+        "Unable to load your profile.";
+      setProfileError(detail);
+    } finally {
+      setProfileLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadProfile();
+  }, [loadProfile]);
 
   // ======================================================
   // USER INFORMATION
@@ -343,15 +360,37 @@ function Profile() {
     );
   }
 
-  // ======================================================
-  // ERROR
-  // ======================================================
-
-  if (profileError) {
+  if (profileError && !profile) {
     return (
-      <div className="max-w-5xl mx-auto">
-        <GlassCard className="p-8">
-          <p className="text-center text-red-500">{profileError}</p>
+      <div className="max-w-xl mx-auto py-12">
+        <GlassCard className="p-8 text-center space-y-4">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10 text-red-500">
+            <AlertCircle size={28} />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            Unable to Load Profile
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-white/70">
+            {profileError}
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+            <button
+              type="button"
+              onClick={loadProfile}
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:scale-105"
+            >
+              <RotateCcw size={16} />
+              Try Again
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-500/20 transition"
+            >
+              <LogOut size={16} />
+              Log In Again
+            </button>
+          </div>
         </GlassCard>
       </div>
     );
@@ -448,10 +487,17 @@ function Profile() {
                   <CheckCircle2 size={13} />
                   Active
                 </span>
+
+                {isAdmin && (
+                  <span className="w-fit mx-auto sm:mx-0 flex items-center gap-1.5 rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                    <ShieldCheck size={13} />
+                    Admin
+                  </span>
+                )}
               </div>
 
               <p className="mt-2 text-gray-600 dark:text-white/70">
-                TravelGenie Explorer
+                {isAdmin ? "TravelGenie Administrator" : "TravelGenie Explorer"}
               </p>
 
               <div className="mt-4 flex justify-center sm:justify-start items-center gap-2 text-sm text-gray-500 dark:text-white/60">
@@ -461,18 +507,29 @@ function Profile() {
             </div>
 
             {/* ==================================================
-                EDIT / SAVE / CANCEL BUTTONS
+                EDIT / SAVE / CANCEL / LOGOUT BUTTONS
             ================================================== */}
 
             {!isEditing ? (
-              <button
-                type="button"
-                onClick={handleEdit}
-                className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
-              >
-                <Edit3 size={18} />
-                Edit Profile
-              </button>
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleEdit}
+                  className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+                >
+                  <Edit3 size={18} />
+                  Edit Profile
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20"
+                >
+                  <LogOut size={18} />
+                  Log Out
+                </button>
+              </div>
             ) : (
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
@@ -707,6 +764,12 @@ function Profile() {
           />
 
           <ProfileInfo
+            icon={<ShieldCheck size={21} />}
+            label="Account Role"
+            value={isAdmin ? "System Administrator (Full Access)" : "Travel Explorer"}
+          />
+
+          <ProfileInfo
             icon={<Calendar size={21} />}
             label="Travel Activity"
             value={
@@ -812,6 +875,50 @@ function Profile() {
                 adventure and TravelGenie will keep track of your journey.
               </p>
             )}
+          </div>
+        </div>
+      </GlassCard>
+
+      {/* ==================================================
+          ACCOUNT SESSION & ACTIONS
+      ================================================== */}
+      <GlassCard className="p-6 sm:p-7 border-red-500/20">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-500">
+              <LogOut size={21} />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                Account Session
+              </h2>
+              <p className="mt-1 text-sm text-gray-600 dark:text-white/70">
+                Logged in as <span className="font-semibold text-gray-900 dark:text-white">{username}</span> {email ? `(${email})` : ""}. You can log out of this session anytime.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            {isAdmin && (
+              <a
+                href="http://127.0.0.1:8000/admin/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/20 transition-all"
+              >
+                <ShieldCheck size={18} />
+                Admin Portal
+              </a>
+            )}
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl bg-red-500 hover:bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition-all hover:scale-[1.02]"
+            >
+              <LogOut size={18} />
+              Log Out
+            </button>
           </div>
         </div>
       </GlassCard>

@@ -15,6 +15,24 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Automatically load environment variables from .env file if present
+env_file = BASE_DIR / ".env"
+if env_file.exists():
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(env_file)
+    except ImportError:
+        # Fallback simple parser if python-dotenv is not installed
+        with open(env_file, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip().strip('"').strip("'")
+                    if k and k not in os.environ:
+                        os.environ[k] = v
+
 
 # =====================================================
 # SECURITY
@@ -98,28 +116,37 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # DATABASE
 # =====================================================
 
-# On Render, DATABASE_URL will exist and PostgreSQL will
-# be used automatically.
-#
-# On your computer, DATABASE_URL does not exist, so your
-# current MySQL database will continue to be used.
+# Supports Supabase / PostgreSQL via DATABASE_URL or individual parameters.
+# If no external database credentials are provided, seamlessly falls back to SQLite.
 
-if os.environ.get("DATABASE_URL"):
+database_url = os.environ.get("DATABASE_URL", "").strip()
+supabase_host = os.environ.get("SUPABASE_DB_HOST", "").strip()
+
+if database_url:
     DATABASES = {
         "default": dj_database_url.config(
+            default=database_url,
             conn_max_age=600,
             conn_health_checks=True,
         )
     }
-else:
+elif supabase_host and os.environ.get("SUPABASE_DB_PASSWORD"):
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": "travelgenie_db",
-            "USER": "root",
-            "PASSWORD": os.environ.get("MYSQL_PASSWORD", "Asma@12345"),
-            "HOST": "127.0.0.1",
-            "PORT": "3306",
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("SUPABASE_DB_NAME", "postgres"),
+            "USER": os.environ.get("SUPABASE_DB_USER", "postgres"),
+            "PASSWORD": os.environ.get("SUPABASE_DB_PASSWORD", ""),
+            "HOST": supabase_host,
+            "PORT": os.environ.get("SUPABASE_DB_PORT", "5432"),
+        }
+    }
+else:
+    # Local SQLite fallback for immediate testing without external database setup
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 
@@ -169,9 +196,21 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": False,
 }
+
+
+# =====================================================
+# AUTHENTICATION BACKENDS
+# =====================================================
+
+AUTHENTICATION_BACKENDS = [
+    "users.backends.EmailOrUsernameModelBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 
 # =====================================================

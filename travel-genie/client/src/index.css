@@ -46,3 +46,29 @@
   color: white;
   border-color: rgba(255, 255, 255, 0.1);
 }
+
+/* Color scheme support for native inputs & selects */
+:root {
+  color-scheme: light;
+}
+
+html.dark,
+.dark {
+  color-scheme: dark;
+}
+
+/* Ensure all native select options are clearly readable across all operating systems and browsers */
+select {
+  color-scheme: light;
+}
+
+select option {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+.dark select option,
+html.dark select option {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}

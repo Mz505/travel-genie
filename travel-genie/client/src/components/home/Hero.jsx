@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   MapPin,
@@ -11,8 +13,35 @@ import {
 } from "lucide-react";
 
 import travel3D from "../../assets/illustrations/travel-3d.png";
+import { useAuth } from "../../context/AuthContext";
 
 function Hero() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [destination, setDestination] = useState("Paris");
+  const [startDate, setStartDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 14);
+    return d.toISOString().split("T")[0];
+  });
+  const [travelers, setTravelers] = useState("2");
+
+  const handleStartPlanning = (e) => {
+    e?.preventDefault();
+    const dest = destination.trim() || "Paris";
+    const query = new URLSearchParams({
+      destination: dest,
+      startDate,
+      travelers: String(travelers),
+    }).toString();
+
+    if (user) {
+      navigate(`/dashboard/trips/create?${query}`);
+    } else {
+      navigate(`/signup?redirect=${encodeURIComponent(`/dashboard/trips/create?${query}`)}`);
+    }
+  };
   return (
     <section
       className="
@@ -215,114 +244,175 @@ function Hero() {
           shadow-2xl
           "
           >
-            <div
-              className="
-          grid
-
-          grid-cols-1
-
-          sm:grid-cols-3
-
-          gap-4
-          "
-            >
-              {/* Destination */}
+            <form onSubmit={handleStartPlanning}>
               <div
                 className="
-    bg-gray-50
-    dark:bg-gray-800
-    rounded-2xl
-    p-4
-  "
+                  grid
+                  grid-cols-1
+                  sm:grid-cols-3
+                  gap-4
+                "
               >
-                <MapPin
-                  size={18}
-                  className="text-cyan-500 dark:text-cyan-400"
-                />
+                {/* Destination */}
+                <div
+                  className="
+                    bg-gray-50
+                    dark:bg-gray-800
+                    rounded-2xl
+                    p-3.5
+                    border
+                    border-gray-100
+                    dark:border-white/5
+                    focus-within:border-cyan-500
+                    transition
+                  "
+                >
+                  <div className="flex items-center gap-1.5 text-cyan-500 dark:text-cyan-400 mb-1">
+                    <MapPin size={16} />
+                    <label
+                      htmlFor="hero-dest"
+                      className="text-xs font-semibold text-gray-500 dark:text-white/60 uppercase tracking-wider"
+                    >
+                      Destination
+                    </label>
+                  </div>
 
-                <p className="text-sm text-gray-500 dark:text-white/60">
-                  Destination
-                </p>
+                  <input
+                    id="hero-dest"
+                    type="text"
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    placeholder="e.g. Paris, Dubai, Istanbul"
+                    className="
+                      w-full
+                      bg-transparent
+                      font-bold
+                      text-gray-900
+                      dark:text-white
+                      text-sm
+                      outline-none
+                      placeholder:text-gray-400
+                    "
+                  />
+                </div>
 
-                <p className="font-semibold text-gray-900 dark:text-white">
-                  Paris
-                </p>
+                {/* Date */}
+                <div
+                  className="
+                    bg-gray-50
+                    dark:bg-gray-800
+                    rounded-2xl
+                    p-3.5
+                    border
+                    border-gray-100
+                    dark:border-white/5
+                    focus-within:border-cyan-500
+                    transition
+                  "
+                >
+                  <div className="flex items-center gap-1.5 text-cyan-500 dark:text-cyan-400 mb-1">
+                    <Calendar size={16} />
+                    <label
+                      htmlFor="hero-date"
+                      className="text-xs font-semibold text-gray-500 dark:text-white/60 uppercase tracking-wider"
+                    >
+                      Date
+                    </label>
+                  </div>
+
+                  <input
+                    id="hero-date"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="
+                      w-full
+                      bg-transparent
+                      font-bold
+                      text-gray-900
+                      dark:text-white
+                      text-sm
+                      outline-none
+                      cursor-pointer
+                    "
+                  />
+                </div>
+
+                {/* Travelers */}
+                <div
+                  className="
+                    bg-gray-50
+                    dark:bg-gray-800
+                    rounded-2xl
+                    p-3.5
+                    border
+                    border-gray-100
+                    dark:border-white/5
+                    focus-within:border-cyan-500
+                    transition
+                  "
+                >
+                  <div className="flex items-center gap-1.5 text-cyan-500 dark:text-cyan-400 mb-1">
+                    <Users size={16} />
+                    <label
+                      htmlFor="hero-travelers"
+                      className="text-xs font-semibold text-gray-500 dark:text-white/60 uppercase tracking-wider"
+                    >
+                      Travelers
+                    </label>
+                  </div>
+
+                  <select
+                    id="hero-travelers"
+                    value={travelers}
+                    onChange={(e) => setTravelers(e.target.value)}
+                    className="
+                      w-full
+                      bg-transparent
+                      font-bold
+                      text-gray-900
+                      dark:text-white
+                      text-sm
+                      outline-none
+                      cursor-pointer
+                      [&>option]:bg-white
+                      [&>option]:text-gray-900
+                    "
+                  >
+                    <option value="1" className="bg-white text-gray-900">1 Traveler</option>
+                    <option value="2" className="bg-white text-gray-900">2 People</option>
+                    <option value="3" className="bg-white text-gray-900">3 People</option>
+                    <option value="4" className="bg-white text-gray-900">4+ People</option>
+                  </select>
+                </div>
               </div>
 
-              {/* Date */}
-              <div
+              <button
+                type="submit"
                 className="
-    bg-gray-50
-    dark:bg-gray-800
-    rounded-2xl
-    p-4
-  "
+                  mt-5
+                  w-full
+                  rounded-full
+                  bg-cyan-500
+                  hover:bg-cyan-400
+                  py-3.5
+                  text-white
+                  font-semibold
+                  flex
+                  justify-center
+                  items-center
+                  gap-2
+                  shadow-lg
+                  shadow-cyan-500/25
+                  hover:scale-[1.02]
+                  active:scale-[0.98]
+                  transition-all
+                "
               >
-                <Calendar
-                  size={18}
-                  className="text-cyan-500 dark:text-cyan-400"
-                />
-
-                <p className="text-sm text-gray-500 dark:text-white/60">Date</p>
-
-                <p className="font-semibold text-gray-900 dark:text-white">
-                  June 20
-                </p>
-              </div>
-
-              {/* Travelers */}
-              <div
-                className="
-    bg-gray-50
-    dark:bg-gray-800
-    rounded-2xl
-    p-4
-  "
-              >
-                <Users size={18} className="text-cyan-500 dark:text-cyan-400" />
-
-                <p className="text-sm text-gray-500 dark:text-white/60">
-                  Travelers
-                </p>
-
-                <p className="font-semibold text-gray-900 dark:text-white">
-                  2 People
-                </p>
-              </div>
-            </div>
-
-            <button
-              className="
-          mt-5
-
-          w-full
-
-          rounded-full
-
-          bg-cyan-500
-
-          py-3
-
-          text-white
-
-          font-semibold
-
-          flex
-
-          justify-center
-
-          items-center
-
-          gap-2
-
-          hover:scale-105
-
-          transition
-          "
-            >
-              Start Planning
-              <ArrowRight size={18} />
-            </button>
+                <span>Start Planning</span>
+                <ArrowRight size={18} />
+              </button>
+            </form>
           </motion.div>
         </motion.div>
 
