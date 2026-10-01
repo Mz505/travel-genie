@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TravelGenie - Quickstart & Setup Guide</title>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --accent: #f59e0b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --code-bg: #0f172a;
+      --code-text: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 36px 40px;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 15px;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .prereq-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 30px;
+    }
+
+    .prereq-box h3 {
+      color: #1e40af;
+      font-size: 15px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .prereq-box ul {
+      list-style-position: inside;
+      color: #1e3a8a;
+      font-size: 14px;
+    }
+
+    .step-card {
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step-card:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .step-number {
+      background: var(--primary);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .step-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      overflow-x: auto;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .code-block pre {
+      white-space: pre-wrap;
+    }
+
+    .code-comment {
+      color: #64748b;
+    }
+
+    .code-cmd {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .accounts-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    .accounts-table th, .accounts-table td {
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      text-align: left;
+    }
+
+    .accounts-table th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .accounts-table tr:hover {
+      background: #f8fafc;
+    }
+
+    .tag-admin {
+      background: #fef3c7;
+      color: #d97706;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .tag-user {
+      background: #e0f2fe;
+      color: #0284c7;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .note-box {
+      background: #fefce8;
+      border-left: 4px solid var(--accent);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin-top: 14px;
+      font-size: 13px;
+      color: #854d0e;
+    }
+
+    .print-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s;
+    }
+
+    .print-btn:hover {
+      transform: translateY(-2px);
+      background: #0369a1;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .container {
+        border: none;
+        box-shadow: none;
+        max-width: 100%;
+      }
+      .print-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <span class="badge">Student Quickstart</span>
+      <h1>TravelGenie Setup & Run Guide</h1>
+      <p>Instructions to run the fullstack project in your IDE (Django + React + Supabase)</p>
+    </div>
+
+    <div class="content">
+      <!-- Prerequisites -->
+      <div class="prereq-box">
+        <h3>📌 Before You Begin</h3>
+        <ul>
+          <li><strong>Python 3.10+</strong> installed (<a href="https://www.python.org/downloads/" target="_blank">python.org</a>)</li>
+          <li><strong>Node.js 18+</strong> installed (<a href="https://nodejs.org/" target="_blank">nodejs.org</a>)</li>
+          <li>Your code editor of choice (VS Code, Cursor, PyCharm, etc.)</li>
+        </ul>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">1</div>
+          <div class="step-title">Open Project in Your IDE</div>
+        </div>
+        <p class="step-desc">Open the downloaded project folder in VS Code. All code, database tables, and configuration files are already configured for you.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">2</div>
+          <div class="step-title">Start the Backend (Django) - Terminal 1</div>
+        </div>
+        <p class="step-desc">Open a new terminal in your IDE (<code>Ctrl + ~</code> in VS Code) and run the following commands:</p>
+        
+        <div class="code-block">
+          <pre><span class="code-comment"># 1. Navigate to the server folder</span>
+<span class="code-cmd">cd server</span>
+
+<span class="code-comment"># 2. Create Python virtual environment</span>
+<span class="code-cmd">python -m venv venv</span>
+
+<span class="code-comment"># 3. Activate the virtual environment</span>
+<span class="code-comment"># On Windows (PowerShell):</span>
+<span class="code-cmd">.\venv\Scripts\activate</span>
+<span class="code-comment"># (On Mac / Linux use: source venv/bin/activate)</span>
+
+<span class="code-comment"># 4. Install backend dependencies</span>
+<span class="code-cmd">pip install -r requirements.txt</span>
+
+<span class="code-comment"># 5. Start the backend server</span>
+<span class="code-cmd">python manage.py runserver 127.0.0.1:8000</span></pre>
+        </div>
+        <div class="note-box">
+          ✨ <strong>Database Note:</strong> Your Supabase database is already connected inside <code>server/.env</code> and all tables are created. You do not need to run migrations.
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">3</div>
+          <div class="step-title">Start the Frontend (React + Vite) - Terminal 2</div>
+        </div>
+        <p class="step-desc">Click the <strong><code>+</code></strong> button in your terminal window to open a <strong>second terminal</strong>, then run:</p>
+
+        <div class="code-block">
+          <pre><span class="code-comment"># 1. Navigate to the client folder</span>
+<span class="code-cmd">cd client</span>
+
+<span class="code-comment"># 2. Install frontend dependencies</span>
+<span class="code-cmd">npm install</span>
+
+<span class="code-comment"># 3. Start the frontend development server</span>
+<span class="code-cmd">npm run dev</span></pre>
+        </div>
+        <p class="step-desc">Now open your browser and navigate to: 👉 <strong><a href="http://localhost:5173/" target="_blank">http://localhost:5173/</a></strong></p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">4</div>
+          <div class="step-title">Log In with Pre-Configured Accounts</div>
+        </div>
+        <p class="step-desc">The database has pre-configured test users and sample trips ready for presentation:</p>
+
+        <table class="accounts-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Email / Username</th>
+              <th>Password</th>
+              <th>Included Sample Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag-admin">Admin</span></td>
+              <td><code>khan@gmail.com</code> / <code>khan</code></td>
+              <td><code>khan@123</code></td>
+              <td>Full Admin access, 3 pre-built trips (Dubai, Istanbul, Herat)</td>
+            </tr>
+            <tr>
+              <td><span class="tag-user">Traveler</span></td>
+              <td><code>asma@gmail.com</code> / <code>asma</code></td>
+              <td><code>asma123</code></td>
+              <td>Student profile, trip to Jeddah</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="note-box">
+          🔐 <strong>Admin Portal:</strong> You can also log into the Django Admin dashboard at <strong><a href="http://127.0.0.1:8000/admin/" target="_blank">http://127.0.0.1:8000/admin/</a></strong> with <code>khan@gmail.com</code> or <code>admin</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">
+    🖨️ Print / Save as PDF
+  </button>
+
+</body>
+</html>

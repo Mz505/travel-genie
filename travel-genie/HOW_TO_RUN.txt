@@ -1,0 +1,74 @@
+================================================================================
+          TRAVELGENIE - QUICKSTART GUIDE (DJANGO + REACT + SUPABASE)
+================================================================================
+
+PREREQUISITES:
+1. Python (version 3.10 or newer) -> https://www.python.org/downloads/
+2. Node.js (version 18 or newer)  -> https://nodejs.org/
+
+--------------------------------------------------------------------------------
+STEP 1: OPEN PROJECT IN YOUR IDE (VS CODE / PYCHARM)
+--------------------------------------------------------------------------------
+Open the "travel-genie" project folder in your code editor.
+Everything (database connection, keys, sample data) is already configured!
+
+--------------------------------------------------------------------------------
+STEP 2: START THE BACKEND (TERMINAL 1)
+--------------------------------------------------------------------------------
+Open your IDE terminal (press Ctrl + ~ in VS Code) and run:
+
+cd server
+python -m venv venv
+
+# If you are on Windows (PowerShell):
+.\venv\Scripts\activate
+
+# (If you are on Mac or Linux):
+# source venv/bin/activate
+
+pip install -r requirements.txt
+python manage.py runserver 127.0.0.1:8000
+
+--> You will see: "Starting development server at http://127.0.0.1:8000/"
+(Your database is already connected to your Supabase project and all tables are ready!)
+
+--------------------------------------------------------------------------------
+STEP 3: START THE FRONTEND (TERMINAL 2)
+--------------------------------------------------------------------------------
+Click the "+" icon in the terminal panel to open a SECOND terminal and run:
+
+cd client
+npm install
+npm run dev
+
+--> You will see: "Local: http://localhost:5173/"
+
+--------------------------------------------------------------------------------
+STEP 4: OPEN BROWSER AND LOG IN
+--------------------------------------------------------------------------------
+Open your browser and navigate to:
+http://localhost:5173/
+
+Pre-configured test accounts ready to use:
+
+1. ADMIN ACCOUNT (With 3 pre-built sample trips to Dubai, Istanbul, Herat):
+   - Email:     khan@gmail.com   (or username: khan)
+   - Password:  khan@123
+   - Role:      Full Admin & Trip Creator
+
+2. STUDENT TRAVELER ACCOUNT:
+   - Email:     asma@gmail.com   (or username: asma)
+   - Password:  asma123
+   - Role:      Regular Traveler (Trip to Jeddah)
+
+3. DJANGO ADMIN PORTAL:
+   - URL:       http://127.0.0.1:8000/admin/
+   - Login:     khan@gmail.com  (Password: khan@123)
+                or admin (Password: admin123)
+
+================================================================================
+TROUBLESHOOTING:
+- If PowerShell gives an execution policy error on "activate", run:
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+  Then run ".\venv\Scripts\activate" again.
+================================================================================
