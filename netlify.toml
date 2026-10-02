@@ -1,3 +1,8 @@
+[build]
+base = 'travel-genie/client'
+command = 'npm install && npm run build'
+publish = 'dist'
+
 [[redirects]]
 from = '/*'
 to = '/index.html'
