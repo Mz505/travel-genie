@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "trips",
     "memories",
     "ai",
+    "flights",
 
     "rest_framework",
 ]
@@ -119,10 +120,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Supports Supabase / PostgreSQL via DATABASE_URL or individual parameters.
 # If no external database credentials are provided, seamlessly falls back to SQLite.
 
+import sys
+
 database_url = os.environ.get("DATABASE_URL", "").strip()
 supabase_host = os.environ.get("SUPABASE_DB_HOST", "").strip()
 
-if database_url:
+if "test" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    }
+elif database_url:
     DATABASES = {
         "default": dj_database_url.config(
             default=database_url,

@@ -106,6 +106,36 @@ export default function BookingModal({ flight, returnFlight, onClose, onBookingS
       if (addTrip) {
         await addTrip(tripData);
       }
+
+      // Also save to local kam_air_bookings storage for instant My Trips page access
+      try {
+        const localBookings = JSON.parse(localStorage.getItem("kam_air_bookings") || "[]");
+        localBookings.unshift({
+          id: `booking-${Date.now()}`,
+          pnr: pnr,
+          passenger_name: `${passenger.firstName} ${passenger.lastName}`,
+          passenger_email: passenger.email,
+          passport_number: passenger.passportNumber,
+          flight_number: flight.flightNumber,
+          origin: flight.origin,
+          origin_city: originCity.name,
+          destination: flight.destination,
+          destination_city: destCity.name,
+          departure_date: flight.date,
+          departure_time: flight.departureTime,
+          arrival_time: flight.arrivalTime,
+          cabin_class: cabinClass,
+          seat_number: `${seatPreference} Preference`,
+          baggage_allowance: `${flight.baggage?.checked || "30 kg"} + ${extraLuggageKg}kg extra`,
+          total_price_usd: totalPriceUSD,
+          status: "CONFIRMED",
+          is_demo: true,
+        });
+        localStorage.setItem("kam_air_bookings", JSON.stringify(localBookings));
+      } catch (e) {
+        console.warn("Could not save to local bookings store:", e);
+      }
+
       setTripSaved(true);
     } catch (err) {
       console.error("Error saving trip:", err);

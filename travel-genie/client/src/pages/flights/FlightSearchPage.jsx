@@ -13,6 +13,8 @@ import {
   ExternalLink,
   ShieldAlert,
 } from "lucide-react";
+import Navbar from "../../components/layout/Navbar";
+import Footer from "../../components/home/Footer";
 import FlightSearchCard from "../../components/flights/FlightSearchCard";
 import BookingModal from "../../components/flights/BookingModal";
 import VisaRequirementsCard from "../../components/flights/VisaRequirementsCard";
@@ -56,25 +58,11 @@ export default function FlightSearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#07111F] text-gray-900 dark:text-white transition-colors duration-300">
-      {/* Top Banner & Co-Branding */}
-      <div className="w-full bg-[#071625] border-b border-white/10 px-4 py-2.5 text-xs text-white/80">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-            <span className="font-bold text-amber-400">TravelGenie × Kam Air</span>
-            <span className="opacity-60 hidden sm:inline">• Official Airline Assistant Concept Prototype</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <CurrencyAndLangSwitcher />
-            <ThemeSwitcher />
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-[#07111F] text-gray-900 dark:text-white transition-colors duration-300 flex flex-col">
+      <Navbar />
 
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Title Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
@@ -252,6 +240,8 @@ export default function FlightSearchPage() {
           onClose={() => setBookingTarget(null)}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

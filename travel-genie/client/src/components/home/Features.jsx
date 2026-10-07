@@ -1,343 +1,130 @@
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { Sparkles, Wallet, Map, Camera, ArrowRight } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
+import {
+  Plane,
+  Clock,
+  Sparkles,
+  Ticket,
+  Luggage,
+  ShieldCheck,
+  ArrowRight,
+  Compass,
+} from "lucide-react";
 
-const features = [
+const airlineFeatures = [
+  {
+    icon: Plane,
+    title: "Flight Search & Reservation",
+    path: "/flights",
+    color: "bg-[#F58220]/10 text-[#F58220]",
+    description:
+      "Search scheduled flights across Kam Air's domestic and international network with transparent fares in USD and AFN.",
+  },
+  {
+    icon: Clock,
+    title: "Live Flight Status",
+    path: "/flight-status",
+    color: "bg-blue-500/10 text-blue-500",
+    description:
+      "Real-time departure, arrival, terminal, boarding gate, and baggage carousel updates for all Kam Air flights.",
+  },
   {
     icon: Sparkles,
-    title: "AI Trip Planning",
+    title: "AI Passenger Concierge",
+    path: "/assistant",
+    color: "bg-amber-500/10 text-amber-500",
+    description:
+      "24/7 conversational travel assistant answering questions on baggage allowances, visa rules, check-in times, and destination tips.",
+  },
+  {
+    icon: Ticket,
+    title: "E-Tickets & PNR Lookup",
+    path: "/my-trip",
+    color: "bg-emerald-500/10 text-emerald-500",
+    description:
+      "Retrieve your booking with your PNR code, complete online check-in, and download official PDF boarding passes.",
+  },
+  {
+    icon: Luggage,
+    title: "Baggage & Umrah Guidance",
+    path: "/travel-info",
+    color: "bg-purple-500/10 text-purple-500",
+    description:
+      "Comprehensive guidelines for 30kg/40kg checked baggage, infant allowances, and complimentary 5L Zamzam water on pilgrim flights.",
+  },
+  {
+    icon: Compass,
+    title: "Kam Air Holiday Packages",
     path: "/dashboard/trips/create",
+    color: "bg-cyan-500/10 text-cyan-500",
     description:
-      "Create personalized travel itineraries with artificial intelligence based on your destination, style, and preferences.",
-  },
-  {
-    icon: Wallet,
-    title: "Smart Budget Management",
-    path: "/dashboard/budget",
-    description:
-      "Plan your expenses, estimate costs, and keep your journey within your ideal budget.",
-  },
-  {
-    icon: Map,
-    title: "Smart Recommendations",
-    path: "/dashboard/recommendations",
-    description:
-      "Discover hidden places, activities, and experiences recommended specially for you.",
-  },
-  {
-    icon: Camera,
-    title: "Travel Memories",
-    path: "/dashboard/memory",
-    description:
-      "Save your favorite moments, photos, and experiences to remember every adventure.",
+      "Build custom day-by-day itineraries and budget estimates for holidays in Dubai, Istanbul, Tashkent, and beyond.",
   },
 ];
 
-function Features() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-
-  const handleFeatureClick = (path) => {
-    if (user) {
-      navigate(path);
-    } else {
-      navigate(`/signup?redirect=${encodeURIComponent(path)}`);
-    }
-  };
+export default function Features() {
   return (
-    <section
-      id="features"
-      className="
-relative
-
-py-20
-
-sm:py-28
-
-px-5
-
-sm:px-10
-
-lg:px-20
-
-bg-white
-
-dark:bg-[#07111F]
-
-transition-colors
-
-duration-500
-
-overflow-hidden
-"
-    >
-      {/* Background Glow */}
-
-      <motion.div
-        animate={{
-          x: [0, 40, 0],
-
-          y: [0, -30, 0],
-        }}
-        transition={{
-          duration: 10,
-
-          repeat: Infinity,
-
-          ease: "easeInOut",
-        }}
-        className="
-absolute
-
-top-20
-
-left-0
-
-h-72
-
-w-72
-
-rounded-full
-
-bg-cyan-300/20
-
-blur-3xl
-"
-      />
-
-      <div
-        className="
-relative
-
-max-w-7xl
-
-mx-auto
-"
-      >
-        {/* Heading */}
-
-        <motion.div
-          initial={{
-            opacity: 0,
-
-            y: 40,
-          }}
-          whileInView={{
-            opacity: 1,
-
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.7,
-          }}
-          className="
-text-center
-
-max-w-3xl
-
-mx-auto
-"
-        >
-          <div
-            className="
-inline-flex
-
-items-center
-
-gap-2
-
-rounded-full
-
-bg-cyan-100
-
-dark:bg-cyan-500/10
-
-px-5
-
-py-2
-
-text-sm
-
-font-semibold
-
-text-cyan-600
-
-dark:text-cyan-300
-"
-          >
-            <Sparkles size={16} />
-            Powerful Travel Features
+    <section id="features" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#07111F] transition-colors">
+      <div className="max-w-7xl mx-auto space-y-12">
+        
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F58220]/10 border border-[#F58220]/20 text-[#F58220] text-xs font-bold">
+            <ShieldCheck size={14} />
+            <span>Digital Passenger Suite</span>
           </div>
 
-          <h2
-            className="
-mt-6
-
-text-3xl
-
-sm:text-4xl
-
-lg:text-5xl
-
-font-bold
-
-text-gray-900
-
-dark:text-white
-
-"
-          >
-            Everything you need for a
-            <span
-              className="
-text-cyan-500
-
-"
-            >
-              smarter journey
-            </span>
+          <h2 className="text-3xl sm:text-4xl font-black text-[#0B1F3A] dark:text-white tracking-tight">
+            Comprehensive Digital Services for Every Passenger
           </h2>
 
-          <p
-            className="
-mt-5
-
-text-lg
-
-text-gray-600
-
-dark:text-gray-300
-"
-          >
-            TravelGenie combines AI technology with travel planning to create
-            unforgettable experiences.
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Everything you need for seamless travel with Kam Air—from flight booking and live status to AI assistance and electronic tickets.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Cards */}
-
-        <div
-          className="
-mt-14
-
-grid
-
-grid-cols-1
-
-sm:grid-cols-2
-
-lg:grid-cols-4
-
-gap-6
-
-"
-        >
-          {features.map((feature, index) => {
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {airlineFeatures.map((feature, idx) => {
             const Icon = feature.icon;
-
             return (
               <motion.div
                 key={feature.title}
-                initial={{
-                  opacity: 0,
-
-                  y: 50,
-                }}
-                whileInView={{
-                  opacity: 1,
-
-                  y: 0,
-                }}
-                viewport={{
-                  once: true,
-                }}
-                transition={{
-                  duration: 0.5,
-
-                  delay: index * 0.15,
-                }}
-                whileHover={{
-                  y: -10,
-                }}
-                onClick={() => handleFeatureClick(feature.path)}
-                className="
-                  group
-                  cursor-pointer
-                  rounded-3xl
-                  border
-                  border-gray-100
-                  dark:border-white/10
-                  bg-white
-                  dark:bg-[#111827]
-                  p-7
-                  shadow-lg
-                  hover:shadow-2xl
-                  transition-all
-                  duration-300
-                  flex
-                  flex-col
-                  justify-between
-                "
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.08 }}
+                className="rounded-3xl bg-[#F5F7FA] dark:bg-[#0B1F3A]/60 p-7 border border-gray-100 dark:border-white/10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
               >
-                <div>
-                  <div
-                    className="
-                      h-14
-                      w-14
-                      rounded-2xl
-                      flex
-                      items-center
-                      justify-center
-                      bg-cyan-100
-                      dark:bg-cyan-500/10
-                      text-cyan-600
-                      dark:text-cyan-300
-                      group-hover:scale-110
-                      transition
-                    "
-                  >
-                    <Icon size={28} />
+                <div className="space-y-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${feature.color}`}>
+                    <Icon size={24} />
                   </div>
 
-                  <h3
-                    className="
-                      mt-6
-                      text-xl
-                      font-bold
-                      text-gray-900
-                      dark:text-white
-                    "
-                  >
+                  <h3 className="text-lg font-black text-[#0B1F3A] dark:text-white group-hover:text-[#F58220] transition">
                     {feature.title}
                   </h3>
 
-                  <p
-                    className="
-                      mt-3
-                      leading-7
-                      text-gray-600
-                      dark:text-gray-300
-                    "
-                  >
+                  <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
 
-                <div className="mt-5 flex items-center gap-1.5 text-xs font-semibold text-cyan-600 dark:text-cyan-400 group-hover:translate-x-1 transition-transform">
-                  <span>Explore feature</span>
-                  <ArrowRight size={14} />
+                <div className="pt-5 mt-4 border-t border-gray-200/50 dark:border-white/10">
+                  <Link
+                    to={feature.path}
+                    className="inline-flex items-center gap-2 text-xs font-bold text-[#F58220] hover:text-[#e07010] transition"
+                  >
+                    <span>Access Service</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition" />
+                  </Link>
                 </div>
               </motion.div>
             );
           })}
         </div>
+
       </div>
     </section>
   );
 }
-
-export default Features;

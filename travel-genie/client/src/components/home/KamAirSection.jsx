@@ -1,250 +1,126 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  Plane,
-  ArrowRight,
-  ShieldCheck,
-  Luggage,
-  Sparkles,
-  Calendar,
-  Compass,
-  ArrowLeftRight,
-} from "lucide-react";
-import { POPULAR_KAM_AIR_ROUTES, KAM_AIR_CITIES } from "../../data/kamAirRoutes";
-import { useLocalization } from "../../context/LocalizationContext";
+import { Link } from "react-router-dom";
+import { Plane, ShieldCheck, Luggage, Sparkles, HeartHandshake, CheckCircle2, ArrowRight } from "lucide-react";
+import { KAM_AIR_FLEET, BAGGAGE_POLICIES } from "../../data/kamAirRoutes";
 
 export default function KamAirSection() {
-  const navigate = useNavigate();
-  const { t, formatPrice } = useLocalization();
-
-  const [origin, setOrigin] = useState("KBL");
-  const [destination, setDestination] = useState("DXB");
-  const [departureDate, setDepartureDate] = useState(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 7);
-    return d.toISOString().split("T")[0];
-  });
-  const [cabin, setCabin] = useState("economy");
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    navigate(
-      `/flights?origin=${origin}&destination=${destination}&date=${departureDate}&cabin=${cabin}`
-    );
-  };
-
-  const handleSwap = () => {
-    const temp = origin;
-    setOrigin(destination);
-    setDestination(temp);
-  };
-
   return (
-    <section className="relative overflow-hidden py-20 px-5 sm:px-10 lg:px-20 bg-gradient-to-b from-[#0b1c2d] to-[#07111F] text-white">
-      {/* Glow backgrounds */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+    <section className="py-20 bg-[#0B1F3A] text-white relative overflow-hidden">
+      {/* Background Ambience */}
+      <div className="absolute top-1/2 -left-20 w-96 h-96 rounded-full bg-[#F58220]/10 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 -right-20 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto">
-        {/* Header Badge & Title */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-4"
-          >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F58220]/15 border border-[#F58220]/30 text-[#F58220] text-xs font-bold uppercase tracking-wider">
             <Plane size={14} className="rotate-45" />
-            <span>TravelGenie × Kam Air Special Integration</span>
-          </motion.div>
+            <span>Afghanistan's Premier Airline</span>
+          </div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-5xl font-black tracking-tight"
-          >
-            Direct Flights from Kabul to the World
-          </motion.h2>
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
+            The Kam Air Passenger Experience
+          </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="mt-4 text-base sm:text-lg text-slate-300"
-          >
-            Search official Kam Air flight schedules, generate AI-tailored itineraries with visa guidance, and preview boarding passes — designed specifically for Afghan travelers.
-          </motion.p>
+          <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+            Founded with a commitment to connecting Afghanistan to the world, Kam Air offers modern aircraft, generous baggage allowances, and authentic Afghan hospitality.
+          </p>
         </div>
 
-        {/* Search Widget */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="bg-white/10 backdrop-blur-2xl border border-white/15 rounded-3xl p-5 sm:p-7 shadow-2xl mb-12"
-        >
-          <form onSubmit={handleSearch} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-              {/* Origin */}
-              <div className="md:col-span-3">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
-                  {t("departureCity")}
-                </label>
-                <select
-                  value={origin}
-                  onChange={(e) => setOrigin(e.target.value)}
-                  className="w-full bg-slate-900/80 border border-white/15 text-white rounded-xl px-3 py-3 text-sm font-semibold focus:outline-none focus:border-amber-400 [&>option]:bg-white [&>option]:text-gray-900 cursor-pointer"
-                >
-                  {KAM_AIR_CITIES.map((c) => (
-                    <option key={c.code} value={c.code} className="bg-white text-gray-900">
-                      {c.name || c.city} ({c.code}) - {c.country}
-                    </option>
-                  ))}
-                </select>
+        {/* Pillars Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          {/* Pillar 1: Modern Fleet */}
+          <div className="rounded-3xl bg-white/5 border border-white/10 p-7 space-y-4 flex flex-col justify-between hover:bg-white/[0.08] transition duration-300">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#F58220]/20 text-[#F58220] flex items-center justify-center">
+                <Plane size={24} />
               </div>
-
-              {/* Swap Button */}
-              <div className="md:col-span-1 flex justify-center">
-                <button
-                  type="button"
-                  onClick={handleSwap}
-                  className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-amber-400 transition hover:rotate-180 duration-300 cursor-pointer"
-                  title="Swap Origin & Destination"
-                >
-                  <ArrowLeftRight size={16} />
-                </button>
-              </div>
-
-              {/* Destination */}
-              <div className="md:col-span-3">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
-                  {t("destination")}
-                </label>
-                <select
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  className="w-full bg-slate-900/80 border border-white/15 text-white rounded-xl px-3 py-3 text-sm font-semibold focus:outline-none focus:border-amber-400 [&>option]:bg-white [&>option]:text-gray-900 cursor-pointer"
-                >
-                  {KAM_AIR_CITIES.map((c) => (
-                    <option key={c.code} value={c.code} className="bg-white text-gray-900">
-                      {c.name || c.city} ({c.code}) - {c.country}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Date */}
-              <div className="md:col-span-3">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
-                  {t("departureDate")}
-                </label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    value={departureDate}
-                    onChange={(e) => setDepartureDate(e.target.value)}
-                    className="w-full bg-slate-900/80 border border-white/15 text-white rounded-xl px-3 py-3 text-sm font-semibold focus:outline-none focus:border-amber-400"
-                  />
-                </div>
-              </div>
-
-              {/* Search Button */}
-              <div className="md:col-span-2 pt-2 md:pt-5">
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/25 transition-transform hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <Plane size={16} />
-                  <span>{t("searchFlights")}</span>
-                </button>
-              </div>
+              <h3 className="text-xl font-black text-white">Modern Jet Fleet</h3>
+              <p className="text-xs text-gray-300 leading-relaxed">
+                Operating reliable Boeing 737-800 narrowbodies for regional routes and widebody Airbus A340-300 aircraft for international trunk routes like Istanbul and Jeddah.
+              </p>
             </div>
-
-            {/* Popular Route Chips */}
-            <div className="pt-3 border-t border-white/10 flex flex-wrap items-center gap-2">
-              <span className="text-xs text-slate-400 font-semibold">{t("popularRoutes")}:</span>
-              {POPULAR_KAM_AIR_ROUTES.slice(0, 5).map((route) => (
-                <button
-                  key={`${route.from}-${route.to}`}
-                  type="button"
-                  onClick={() => {
-                    setOrigin(route.from);
-                    setDestination(route.to);
-                    navigate(
-                      `/flights?origin=${route.from}&destination=${route.to}&date=${departureDate}`
-                    );
-                  }}
-                  className="text-xs px-3 py-1.5 rounded-full bg-white/5 hover:bg-amber-500/20 border border-white/10 hover:border-amber-400/50 text-slate-200 transition"
-                >
-                  {route.label} • {formatPrice(route.priceUSD)}
-                </button>
-              ))}
-            </div>
-          </form>
-        </motion.div>
-
-        {/* Feature Highlights Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-amber-500/30 transition">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-4">
-              <Luggage size={24} />
-            </div>
-            <h3 className="text-lg font-bold mb-2">Generous Afghan Baggage Allowance</h3>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Standard 30kg checked baggage + 7kg hand luggage on international routes, plus complimentary 5L Zamzam water allowance on Jeddah flights.
-            </p>
+            <ul className="space-y-1.5 text-xs text-gray-300 pt-2 border-t border-white/10">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 size={14} className="text-[#F58220]" />
+                <span>Boeing 737-800 (189 Seats, Business & Economy)</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 size={14} className="text-[#F58220]" />
+                <span>Airbus A340-300 (300 Seats, Long-Range Widebody)</span>
+              </li>
+            </ul>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-cyan-500/30 transition">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-4">
-              <Sparkles size={24} />
+          {/* Pillar 2: Baggage & Pilgrim Services */}
+          <div className="rounded-3xl bg-white/5 border border-white/10 p-7 space-y-4 flex flex-col justify-between hover:bg-white/[0.08] transition duration-300">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                <Luggage size={24} />
+              </div>
+              <h3 className="text-xl font-black text-white">Generous Baggage & Umrah</h3>
+              <p className="text-xs text-gray-300 leading-relaxed">
+                Enjoy 30 kg checked luggage + 7 kg cabin bag on Economy (40 kg on Business), plus complimentary 5 Liters of Zamzam water on all pilgrim departures from Saudi Arabia.
+              </p>
             </div>
-            <h3 className="text-lg font-bold mb-2">Kam Air AI Travel Architect</h3>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Ask AI to craft complete trip itineraries aligned with Kam Air flight timetables, terminal tips at Kabul International, and real hotel/attraction ideas.
-            </p>
+            <ul className="space-y-1.5 text-xs text-gray-300 pt-2 border-t border-white/10">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 size={14} className="text-amber-400" />
+                <span>30 kg Checked (Economy) / 40 kg (Business)</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 size={14} className="text-amber-400" />
+                <span>Complimentary 5L Zamzam Water on Pilgrim Flights</span>
+              </li>
+            </ul>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-emerald-500/30 transition">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
-              <ShieldCheck size={24} />
+          {/* Pillar 3: AI Digital Assistant */}
+          <div className="rounded-3xl bg-white/5 border border-white/10 p-7 space-y-4 flex flex-col justify-between hover:bg-white/[0.08] transition duration-300">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <Sparkles size={24} />
+              </div>
+              <h3 className="text-xl font-black text-white">24/7 AI Passenger Concierge</h3>
+              <p className="text-xs text-gray-300 leading-relaxed">
+                Get instant, grounded guidance on visa regulations, flight schedules, baggage policies, and airport timelines in multiple languages.
+              </p>
             </div>
-            <h3 className="text-lg font-bold mb-2">Visa & Travel Advisory</h3>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Real-time travel requirements, passport validity rules, and visa protocols for Afghan passport holders flying to Dubai, Istanbul, Delhi, and Tashkent.
-            </p>
+            <ul className="space-y-1.5 text-xs text-gray-300 pt-2 border-t border-white/10">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 size={14} className="text-emerald-400" />
+                <span>Verified Kam Air Knowledge Base</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 size={14} className="text-emerald-400" />
+                <span>Multi-language Passenger Support</span>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom CTA Row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20">
-          <div>
-            <h4 className="font-bold text-lg text-white">Explore Full Timetables & Fleet Directory</h4>
-            <p className="text-xs sm:text-sm text-slate-400">
-              Browse weekly schedules, Airbus A340 & Boeing 737 specifications, and ticketing offices in Kabul.
+        {/* CTA Banner */}
+        <div className="rounded-3xl bg-[#F58220] p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
+          <div className="space-y-2 text-center sm:text-left">
+            <h3 className="text-2xl font-black tracking-tight">Ready to Fly with Kam Air?</h3>
+            <p className="text-xs text-white/90 max-w-lg">
+              Explore scheduled flights from Kabul to Dubai, Istanbul, Jeddah, Tashkent, Delhi, and domestic cities today.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/kam-air"
-              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sm font-semibold text-white transition"
-            >
-              Flight Directory
-            </Link>
+
+          <div className="flex items-center gap-3 shrink-0">
             <Link
               to="/flights"
-              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5"
+              className="px-6 py-3.5 rounded-xl bg-[#0B1F3A] hover:bg-[#071625] text-white text-xs font-bold shadow-lg transition flex items-center gap-2"
             >
-              <span>Search Flights</span>
+              <span>Search Flights Now</span>
               <ArrowRight size={16} />
             </Link>
           </div>
         </div>
+
       </div>
     </section>
   );

@@ -3,11 +3,15 @@ import { Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Profile from "./pages/dashboard/Profile";
-import Settings from "./pages/dashboard/Settings";
+import FlightSearchPage from "./pages/flights/FlightSearchPage";
+import FlightStatusPage from "./pages/flights/FlightStatusPage";
+import AIAssistantPage from "./pages/assistant/AIAssistantPage";
+import MyTripsPage from "./pages/trips/MyTripsPage";
+import DestinationsPage from "./pages/destinations/DestinationsPage";
+import TravelInfoPage from "./pages/info/TravelInfoPage";
+import CustomerSupportPage from "./pages/support/CustomerSupportPage";
 
 import ProtectedRoute from "./components/routes/ProtectedRoute";
-
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -18,25 +22,30 @@ import CreateTrip from "./pages/dashboard/CreateTrip";
 import Budget from "./pages/dashboard/Budget";
 import Recommendations from "./pages/dashboard/Recommendations";
 import Memory from "./pages/dashboard/Memory";
-import FlightSearchPage from "./pages/flights/FlightSearchPage";
-import KamAirInfo from "./pages/flights/KamAirInfo";
+import Profile from "./pages/dashboard/Profile";
+import Settings from "./pages/dashboard/Settings";
 import KamAirAnalytics from "./pages/dashboard/KamAirAnalytics";
 
 function App() {
   return (
     <Routes>
-      {/* Public Pages */}
+      {/* Public Airline Platform Pages */}
       <Route path="/" element={<LandingPage />} />
-
       <Route path="/login" element={<Login />} />
-
       <Route path="/signup" element={<Signup />} />
 
       <Route path="/flights" element={<FlightSearchPage />} />
+      <Route path="/flight-status" element={<FlightStatusPage />} />
+      <Route path="/assistant" element={<AIAssistantPage />} />
+      <Route path="/my-trip" element={<MyTripsPage />} />
+      <Route path="/destinations" element={<DestinationsPage />} />
+      <Route path="/travel-info" element={<TravelInfoPage />} />
+      <Route path="/support" element={<CustomerSupportPage />} />
 
-      <Route path="/kam-air" element={<KamAirInfo />} />
+      {/* Backward Compatibility Routes */}
+      <Route path="/kam-air" element={<DestinationsPage />} />
 
-      {/* Protected Dashboard */}
+      {/* Protected Passenger Dashboard Hub */}
       <Route
         path="/dashboard"
         element={
@@ -47,24 +56,22 @@ function App() {
       >
         <Route index element={<Dashboard />} />
 
-        {/* Trips */}
+        {/* Trips & Bookings */}
         <Route path="trips" element={<Trips />} />
-
-        {/* Create must come before :id */}
         <Route path="trips/create" element={<CreateTrip />} />
-
-        {/* Edit must also come before :id */}
         <Route path="trips/:id/edit" element={<EditTrip />} />
-
-        {/* Dynamic trip details */}
         <Route path="trips/:id" element={<TripDetails />} />
 
-        {/* Kam Air Flight Booking in Dashboard */}
+        {/* Embedded Airline Tools */}
         <Route path="flights" element={<FlightSearchPage />} />
+        <Route path="flight-status" element={<FlightStatusPage />} />
+        <Route path="assistant" element={<AIAssistantPage />} />
+        <Route path="my-trip" element={<MyTripsPage />} />
 
-        {/* Kam Air Executive Analytics (Superuser/Staff) */}
+        {/* Staff & Executive Portal */}
         <Route path="kam-air-analytics" element={<KamAirAnalytics />} />
 
+        {/* Passenger Tools */}
         <Route path="budget" element={<Budget />} />
         <Route path="recommendations" element={<Recommendations />} />
         <Route path="memory" element={<Memory />} />

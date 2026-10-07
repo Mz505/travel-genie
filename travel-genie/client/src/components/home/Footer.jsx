@@ -1,161 +1,161 @@
-import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaInstagram, FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
-import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
+import { Plane, Phone, Mail, MapPin, ShieldCheck, Heart } from "lucide-react";
 
-const footerSections = [
-  {
-    title: "Product",
-    links: [
-      { name: "Features", href: "#features" },
-      { name: "Destinations", href: "#destinations" },
-      { name: "AI Planner", route: "/dashboard/trips/create" },
-      { name: "Kam Air Flights", route: "/flights" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { name: "About", href: "#about" },
-      { name: "Kam Air Directory", route: "/kam-air" },
-      { name: "AI Recommendations", route: "/dashboard/recommendations" },
-      { name: "Travel Memories", route: "/dashboard/memory" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { name: "Kam Air Schedules", route: "/kam-air#schedules" },
-      { name: "Baggage Guide", route: "/kam-air#baggage" },
-      { name: "How It Works", href: "#how-it-works" },
-      { name: "Support", href: "mailto:support@travelgenie.com" },
-    ],
-  },
-];
-
-const socials = [
-  { icon: FaInstagram, name: "Instagram", url: "https://instagram.com" },
-  { icon: FaTwitter, name: "Twitter", url: "https://twitter.com" },
-  { icon: FaGithub, name: "Github", url: "https://github.com" },
-  { icon: FaLinkedin, name: "LinkedIn", url: "https://linkedin.com" },
-];
-
-function Footer() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-
-  const handleLinkClick = (item, e) => {
-    if (item.route) {
-      e.preventDefault();
-      if (!user && item.route.startsWith("/dashboard")) {
-        navigate(`/signup?redirect=${encodeURIComponent(item.route)}`);
-      } else {
-        navigate(item.route);
-      }
-    } else if (item.href?.startsWith("#")) {
-      e.preventDefault();
-      const el = document.querySelector(item.href);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      } else {
-        navigate(`/${item.href}`);
-      }
-    }
-  };
-
+export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#F8FAFC] dark:bg-[#07111F] text-gray-900 dark:text-white pt-14 pb-6 border-t border-gray-200/50 dark:border-white/5">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-300/20 blur-3xl dark:bg-cyan-500/10 pointer-events-none" />
-
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-20">
-        {/* Footer Main */}
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
-          {/* Brand */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2"
-          >
-            <Link to="/" className="inline-flex items-center gap-2 group">
-              <Sparkles className="text-cyan-500 transition-transform group-hover:rotate-12" />
-              <h3 className="text-2xl font-bold">
-                Travel<span className="text-cyan-500">Genie</span>
-              </h3>
+    <footer className="bg-[#0B1F3A] text-white pt-14 pb-8 border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        
+        {/* Main 4-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          
+          {/* Brand Col */}
+          <div className="lg:col-span-2 space-y-4">
+            <Link to="/" className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#F58220] flex items-center justify-center text-white shadow-md">
+                <Plane size={20} className="transform -rotate-45" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black tracking-tight text-white leading-none">
+                  KAM<span className="text-[#F58220]">AIR</span>
+                </span>
+                <span className="text-[9px] font-bold tracking-widest text-amber-400 uppercase mt-0.5">
+                  Digital Passenger Platform
+                </span>
+              </div>
             </Link>
 
-            <p className="mt-4 max-w-sm leading-7 text-gray-600 dark:text-gray-400">
-              Your AI-powered travel companion. Create smart itineraries,
-              discover destinations, search Kam Air flights, and organize
-              unforgettable journeys.
+            <p className="text-xs text-gray-300 leading-relaxed max-w-sm">
+              Connecting Kabul to international and domestic destinations. Official digital passenger assistant prototype combining authentic airline flight schedules, e-ticketing, and grounded AI customer assistance.
             </p>
 
-            {/* Social Icons */}
-            <div className="mt-6 flex gap-3">
-              {socials.map((social) => {
-                const Icon = social.icon;
-
-                return (
-                  <a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={social.name}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition hover:-translate-y-1 hover:bg-cyan-500 hover:text-white dark:bg-white/10 dark:text-white cursor-pointer"
-                  >
-                    <Icon size={18} />
-                  </a>
-                );
-              })}
+            <div className="pt-2 space-y-1.5 text-xs text-gray-300">
+              <div className="flex items-center gap-2">
+                <Phone size={14} className="text-[#F58220]" />
+                <span>24/7 Helpline: <strong>+93 79 977 7777</strong></span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail size={14} className="text-[#F58220]" />
+                <span>info@kamair.com</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin size={14} className="text-[#F58220]" />
+                <span>Kabul International Airport Road, Kabul, Afghanistan</span>
+              </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Links */}
-          {footerSections.map((section) => (
-            <div key={section.title}>
-              <h4 className="font-semibold text-lg">{section.title}</h4>
+          {/* Col 1: Flight Services */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-black uppercase tracking-wider text-amber-400">
+              Flight Services
+            </h4>
+            <ul className="space-y-2 text-xs text-gray-300">
+              <li>
+                <Link to="/flights" className="hover:text-[#F58220] transition">
+                  Search & Book Flights
+                </Link>
+              </li>
+              <li>
+                <Link to="/flight-status" className="hover:text-[#F58220] transition">
+                  Flight Status Tracking
+                </Link>
+              </li>
+              <li>
+                <Link to="/my-trip" className="hover:text-[#F58220] transition">
+                  My Trips & Boarding Pass
+                </Link>
+              </li>
+              <li>
+                <Link to="/destinations" className="hover:text-[#F58220] transition">
+                  Route Network & Hubs
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-              <ul className="mt-4 space-y-3 text-gray-600 dark:text-gray-400 text-sm">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    {link.href?.startsWith("mailto:") ? (
-                      <a
-                        href={link.href}
-                        className="transition hover:text-cyan-500 dark:hover:text-cyan-400 inline-block"
-                      >
-                        {link.name}
-                      </a>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={(e) => handleLinkClick(link, e)}
-                        className="cursor-pointer transition hover:text-cyan-500 dark:hover:text-cyan-400 hover:translate-x-1 text-left inline-block"
-                      >
-                        {link.name}
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Col 2: Passenger Info */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-black uppercase tracking-wider text-amber-400">
+              Travel Information
+            </h4>
+            <ul className="space-y-2 text-xs text-gray-300">
+              <li>
+                <Link to="/travel-info" className="hover:text-[#F58220] transition">
+                  Baggage Allowances (30kg/40kg)
+                </Link>
+              </li>
+              <li>
+                <Link to="/travel-info" className="hover:text-[#F58220] transition">
+                  Umrah & Zamzam Policy (5L)
+                </Link>
+              </li>
+              <li>
+                <Link to="/travel-info" className="hover:text-[#F58220] transition">
+                  Check-in & Airport Deadlines
+                </Link>
+              </li>
+              <li>
+                <Link to="/travel-info" className="hover:text-[#F58220] transition">
+                  Visa & Passport Requirements
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 3: Assistance & Portal */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-black uppercase tracking-wider text-amber-400">
+              Assistance & Portal
+            </h4>
+            <ul className="space-y-2 text-xs text-gray-300">
+              <li>
+                <Link to="/assistant" className="hover:text-[#F58220] font-semibold text-amber-300 transition flex items-center gap-1">
+                  <span>AI Passenger Concierge</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/support" className="hover:text-[#F58220] transition">
+                  Customer Support & Offices
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard" className="hover:text-[#F58220] transition">
+                  Passenger Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/dashboard/kam-air-analytics" className="hover:text-[#F58220] transition">
+                  Staff Analytics Portal
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-10 border-t border-gray-200 dark:border-white/10 pt-5 flex flex-col gap-3 text-sm text-gray-500 dark:text-gray-400 sm:flex-row sm:justify-between items-center">
-          <p>© {new Date().getFullYear()} TravelGenie. All rights reserved.</p>
-          <p className="flex items-center gap-2">
-            <span>Official Kam Air Demo Integration</span>
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-            <span>AI Powered Travel Experience</span>
-          </p>
+        {/* Prototype Transparency & Copyright */}
+        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={16} className="text-emerald-500" />
+            <span>
+              Kam Air AI Passenger Travel Platform • Enterprise Prototype Proposal (2026)
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Link to="/support" className="hover:underline">
+              Contact Desk
+            </Link>
+            <Link to="/travel-info" className="hover:underline">
+              Baggage Rules
+            </Link>
+            <Link to="/flights" className="hover:underline">
+              Schedules
+            </Link>
+          </div>
         </div>
+
       </div>
     </footer>
   );
 }
-
-export default Footer;

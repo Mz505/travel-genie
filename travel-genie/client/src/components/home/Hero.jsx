@@ -1,614 +1,389 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
+  Plane,
+  Clock,
+  Sparkles,
+  ArrowRight,
   MapPin,
   Calendar,
   Users,
-  Sparkles,
-  ArrowRight,
-  CloudSun,
-  Wallet,
-  MapPinned,
+  Search,
+  ShieldCheck,
+  Luggage,
+  Compass,
 } from "lucide-react";
+import { KAM_AIR_CITIES } from "../../data/kamAirRoutes";
 
-import travel3D from "../../assets/illustrations/travel-3d.png";
-import { useAuth } from "../../context/AuthContext";
-
-function Hero() {
+export default function Hero() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("flight"); // 'flight', 'status', 'assistant'
 
-  const [destination, setDestination] = useState("Paris");
-  const [startDate, setStartDate] = useState(() => {
+  // Flight search widget state
+  const [origin, setOrigin] = useState("KBL");
+  const [destination, setDestination] = useState("DXB");
+  const [departureDate, setDepartureDate] = useState(() => {
     const d = new Date();
-    d.setDate(d.getDate() + 14);
+    d.setDate(d.getDate() + 3);
     return d.toISOString().split("T")[0];
   });
-  const [travelers, setTravelers] = useState("2");
+  const [passengers, setPassengers] = useState(1);
+  const [cabinClass, setCabinClass] = useState("Economy");
 
-  const handleStartPlanning = (e) => {
-    e?.preventDefault();
-    const dest = destination.trim() || "Paris";
-    const query = new URLSearchParams({
-      destination: dest,
-      startDate,
-      travelers: String(travelers),
-    }).toString();
+  // Flight status widget state
+  const [statusFlightNo, setStatusFlightNo] = useState("RQ-901");
 
-    if (user) {
-      navigate(`/dashboard/trips/create?${query}`);
-    } else {
-      navigate(`/signup?redirect=${encodeURIComponent(`/dashboard/trips/create?${query}`)}`);
-    }
+  // AI query widget state
+  const [aiQuery, setAiQuery] = useState("");
+
+  const handleFlightSearch = (e) => {
+    e.preventDefault();
+    navigate(
+      `/flights?origin=${origin}&destination=${destination}&date=${departureDate}&passengers=${passengers}&cabin=${cabinClass}`
+    );
   };
+
+  const handleStatusSearch = (e) => {
+    e.preventDefault();
+    navigate(`/flight-status?flight=${encodeURIComponent(statusFlightNo)}`);
+  };
+
+  const handleAiAssistantSubmit = (e) => {
+    e.preventDefault();
+    const q = aiQuery.trim() || "What flights are available from Kabul to Dubai?";
+    navigate(`/assistant?q=${encodeURIComponent(q)}`);
+  };
+
   return (
-    <section
-      className="
-      relative
-      overflow-hidden
-      
-      min-h-[calc(100vh-80px)]
+    <section className="relative overflow-hidden bg-[#0B1F3A] text-white py-14 lg:py-20 px-4 sm:px-6 lg:px-8">
+      {/* Subtle Background Glows */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#F58220]/15 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
 
-      bg-[#F5FBFB]
-      dark:bg-[#07111F]
-
-      px-5
-      sm:px-10
-      lg:px-20
-
-      py-10
-      "
-    >
-      {/* Animated Background */}
-
-      <motion.div
-        animate={{
-          x: [0, 40, 0],
-          y: [0, -30, 0],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="
-        absolute
-        -top-20
-        -left-20
-
-        h-80
-        w-80
-
-        rounded-full
-
-        bg-cyan-300/30
-
-        blur-3xl
-        "
-      />
-
-      <motion.div
-        animate={{
-          x: [0, -40, 0],
-          y: [0, 30, 0],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-        }}
-        className="
-        absolute
-        bottom-0
-        right-0
-
-        h-96
-        w-96
-
-        rounded-full
-
-        bg-purple-300/20
-
-        blur-3xl
-        "
-      />
-
-      <div
-        className="
-        relative
-        max-w-7xl
-        mx-auto
-
-        grid
-        grid-cols-1
-        lg:grid-cols-2
-
-        gap-10
-        lg:gap-16
-
-        items-center
-        "
-      >
-        {/* LEFT SIDE */}
-
-        <motion.div
-          initial={{
-            opacity: 0,
-            x: -50,
-          }}
-          animate={{
-            opacity: 1,
-            x: 0,
-          }}
-          transition={{
-            duration: 0.8,
-          }}
-        >
-          <div
-            className="
-            inline-flex
-            items-center
-            gap-2
-
-            rounded-full
-
-            bg-white
-
-            px-5
-            py-2
-
-            shadow-lg
-
-            text-sm
-
-            font-semibold
-
-            text-cyan-600
-            "
+      <div className="max-w-7xl mx-auto relative z-10 space-y-12">
+        
+        {/* Main Headline & Supporting Text */}
+        <div className="text-center max-w-3xl mx-auto space-y-5">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F58220]/15 border border-[#F58220]/30 text-[#F58220] text-xs font-bold"
           >
-            <Sparkles size={16} />
-            AI Powered Travel Assistant
+            <Plane size={15} className="transform -rotate-45" />
+            <span>Official Digital Passenger Platform</span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]"
+          >
+            Your Journey Starts with <span className="text-[#F58220]">Kam Air</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed"
+          >
+            Search flights, manage your journey, check flight information, and get personalized travel assistance in one place.
+          </motion.p>
+
+          {/* Primary Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-wrap items-center justify-center gap-3 pt-2"
+          >
+            <Link
+              to="/flights"
+              className="px-6 py-3.5 rounded-xl bg-[#F58220] hover:bg-[#e07010] text-white font-bold text-sm shadow-lg shadow-[#F58220]/30 transition flex items-center gap-2 cursor-pointer"
+            >
+              <Plane size={18} />
+              <span>Search Flights</span>
+            </Link>
+
+            <Link
+              to="/assistant"
+              className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-sm transition flex items-center gap-2 cursor-pointer"
+            >
+              <Sparkles size={18} className="text-amber-400" />
+              <span>AI Travel Assistant</span>
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* ================= HERO INTERACTIVE WIDGET ================= */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="max-w-4xl mx-auto rounded-3xl bg-white text-gray-900 dark:bg-[#071625] dark:text-white p-6 sm:p-8 shadow-2xl border border-gray-100 dark:border-white/10"
+        >
+          {/* Tabs */}
+          <div className="flex items-center gap-2 border-b border-gray-200 dark:border-white/10 pb-4 mb-6 overflow-x-auto no-scrollbar">
+            <button
+              type="button"
+              onClick={() => setActiveTab("flight")}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shrink-0 ${
+                activeTab === "flight"
+                  ? "bg-[#0B1F3A] text-white dark:bg-[#F58220]"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
+              }`}
+            >
+              <Plane size={16} />
+              <span>Book Flight</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("status")}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shrink-0 ${
+                activeTab === "status"
+                  ? "bg-[#0B1F3A] text-white dark:bg-[#F58220]"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
+              }`}
+            >
+              <Clock size={16} />
+              <span>Flight Status</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("assistant")}
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shrink-0 ${
+                activeTab === "assistant"
+                  ? "bg-[#0B1F3A] text-white dark:bg-[#F58220]"
+                  : "text-amber-600 dark:text-amber-400 hover:bg-gray-100 dark:hover:bg-white/5"
+              }`}
+            >
+              <Sparkles size={16} />
+              <span>AI Passenger Concierge</span>
+            </button>
           </div>
 
-          <h1
-            className="
-            mt-7
-
-            text-4xl
-            sm:text-5xl
-            lg:text-6xl
-
-            font-bold
-
-            leading-tight
-
-            text-[#102B2B]
-
-            dark:text-white
-            "
-          >
-            Explore the world.
-            <span
-              className="
-              block
-              text-cyan-500
-              "
-            >
-              Plan your journey
-            </span>
-            with AI.
-          </h1>
-
-          <p
-            className="
-            mt-5
-
-            max-w-xl
-
-            text-lg
-
-            text-gray-600
-
-            dark:text-gray-300
-            "
-          >
-            TravelGenie creates personalized trips, discovers destinations and
-            builds smart itineraries in seconds.
-          </p>
-
-          {/* Planner Card */}
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 40,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              delay: 0.4,
-            }}
-            className="
-          mt-8
-
-          rounded-[30px]
-
-          bg-white
-
-          dark:bg-gray-900
-
-          p-5
-
-          shadow-2xl
-          "
-          >
-            <form onSubmit={handleStartPlanning}>
-              <div
-                className="
-                  grid
-                  grid-cols-1
-                  sm:grid-cols-3
-                  gap-4
-                "
-              >
-                {/* Destination */}
-                <div
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    rounded-2xl
-                    p-3.5
-                    border
-                    border-gray-100
-                    dark:border-white/5
-                    focus-within:border-cyan-500
-                    transition
-                  "
-                >
-                  <div className="flex items-center gap-1.5 text-cyan-500 dark:text-cyan-400 mb-1">
-                    <MapPin size={16} />
-                    <label
-                      htmlFor="hero-dest"
-                      className="text-xs font-semibold text-gray-500 dark:text-white/60 uppercase tracking-wider"
+          {/* TAB 1: FLIGHT SEARCH WIDGET */}
+          {activeTab === "flight" && (
+            <form onSubmit={handleFlightSearch} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                {/* From */}
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                    From (Origin)
+                  </label>
+                  <div className="relative">
+                    <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <select
+                      value={origin}
+                      onChange={(e) => setOrigin(e.target.value)}
+                      className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 pl-9 pr-3 py-3 text-xs font-bold outline-none focus:border-[#F58220] text-gray-900 dark:text-white"
                     >
-                      Destination
-                    </label>
+                      <option value="KBL">Kabul (KBL) - Hub</option>
+                      <option value="DXB">Dubai (DXB)</option>
+                      <option value="IST">Istanbul (IST)</option>
+                      <option value="JED">Jeddah (JED)</option>
+                      <option value="DEL">Delhi (DEL)</option>
+                      <option value="TAS">Tashkent (TAS)</option>
+                      <option value="HEA">Herat (HEA)</option>
+                      <option value="MZR">Mazar (MZR)</option>
+                    </select>
                   </div>
-
-                  <input
-                    id="hero-dest"
-                    type="text"
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                    placeholder="e.g. Paris, Dubai, Istanbul"
-                    className="
-                      w-full
-                      bg-transparent
-                      font-bold
-                      text-gray-900
-                      dark:text-white
-                      text-sm
-                      outline-none
-                      placeholder:text-gray-400
-                    "
-                  />
                 </div>
 
-                {/* Date */}
-                <div
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    rounded-2xl
-                    p-3.5
-                    border
-                    border-gray-100
-                    dark:border-white/5
-                    focus-within:border-cyan-500
-                    transition
-                  "
-                >
-                  <div className="flex items-center gap-1.5 text-cyan-500 dark:text-cyan-400 mb-1">
-                    <Calendar size={16} />
-                    <label
-                      htmlFor="hero-date"
-                      className="text-xs font-semibold text-gray-500 dark:text-white/60 uppercase tracking-wider"
+                {/* To */}
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                    To (Destination)
+                  </label>
+                  <div className="relative">
+                    <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#F58220]" />
+                    <select
+                      value={destination}
+                      onChange={(e) => setDestination(e.target.value)}
+                      className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 pl-9 pr-3 py-3 text-xs font-bold outline-none focus:border-[#F58220] text-gray-900 dark:text-white"
                     >
-                      Date
-                    </label>
+                      <option value="DXB">Dubai (DXB) - UAE</option>
+                      <option value="IST">Istanbul (IST) - Turkey</option>
+                      <option value="JED">Jeddah (JED) - Umrah</option>
+                      <option value="DEL">Delhi (DEL) - India</option>
+                      <option value="TAS">Tashkent (TAS) - Uzbekistan</option>
+                      <option value="ISB">Islamabad (ISB) - Pakistan</option>
+                      <option value="KBL">Kabul (KBL)</option>
+                      <option value="HEA">Herat (HEA)</option>
+                      <option value="MZR">Mazar-i-Sharif (MZR)</option>
+                    </select>
                   </div>
-
-                  <input
-                    id="hero-date"
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="
-                      w-full
-                      bg-transparent
-                      font-bold
-                      text-gray-900
-                      dark:text-white
-                      text-sm
-                      outline-none
-                      cursor-pointer
-                    "
-                  />
                 </div>
 
-                {/* Travelers */}
-                <div
-                  className="
-                    bg-gray-50
-                    dark:bg-gray-800
-                    rounded-2xl
-                    p-3.5
-                    border
-                    border-gray-100
-                    dark:border-white/5
-                    focus-within:border-cyan-500
-                    transition
-                  "
-                >
-                  <div className="flex items-center gap-1.5 text-cyan-500 dark:text-cyan-400 mb-1">
-                    <Users size={16} />
-                    <label
-                      htmlFor="hero-travelers"
-                      className="text-xs font-semibold text-gray-500 dark:text-white/60 uppercase tracking-wider"
-                    >
-                      Travelers
-                    </label>
+                {/* Departure Date */}
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                    Departure Date
+                  </label>
+                  <div className="relative">
+                    <Calendar size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="date"
+                      value={departureDate}
+                      onChange={(e) => setDepartureDate(e.target.value)}
+                      className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 pl-9 pr-3 py-2.5 text-xs font-bold outline-none focus:border-[#F58220]"
+                    />
                   </div>
+                </div>
 
-                  <select
-                    id="hero-travelers"
-                    value={travelers}
-                    onChange={(e) => setTravelers(e.target.value)}
-                    className="
-                      w-full
-                      bg-transparent
-                      font-bold
-                      text-gray-900
-                      dark:text-white
-                      text-sm
-                      outline-none
-                      cursor-pointer
-                      [&>option]:bg-white
-                      [&>option]:text-gray-900
-                    "
-                  >
-                    <option value="1" className="bg-white text-gray-900">1 Traveler</option>
-                    <option value="2" className="bg-white text-gray-900">2 People</option>
-                    <option value="3" className="bg-white text-gray-900">3 People</option>
-                    <option value="4" className="bg-white text-gray-900">4+ People</option>
-                  </select>
+                {/* Passengers & Class */}
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                    Passengers & Class
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <select
+                      value={passengers}
+                      onChange={(e) => setPassengers(Number(e.target.value))}
+                      className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 px-2 py-3 text-xs font-bold outline-none focus:border-[#F58220] text-gray-900 dark:text-white"
+                    >
+                      <option value={1}>1 Adult</option>
+                      <option value={2}>2 Adults</option>
+                      <option value={3}>3 Adults</option>
+                      <option value={4}>4+ Family</option>
+                    </select>
+
+                    <select
+                      value={cabinClass}
+                      onChange={(e) => setCabinClass(e.target.value)}
+                      className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 px-2 py-3 text-xs font-bold outline-none focus:border-[#F58220] text-gray-900 dark:text-white"
+                    >
+                      <option value="Economy">Economy</option>
+                      <option value="Business">Business</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="
-                  mt-5
-                  w-full
-                  rounded-full
-                  bg-cyan-500
-                  hover:bg-cyan-400
-                  py-3.5
-                  text-white
-                  font-semibold
-                  flex
-                  justify-center
-                  items-center
-                  gap-2
-                  shadow-lg
-                  shadow-cyan-500/25
-                  hover:scale-[1.02]
-                  active:scale-[0.98]
-                  transition-all
-                "
-              >
-                <span>Start Planning</span>
-                <ArrowRight size={18} />
-              </button>
+              {/* Submit Button */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                  <span className="flex items-center gap-1">
+                    <Luggage size={14} className="text-[#F58220]" />
+                    <span>30 kg Checked Baggage Included</span>
+                  </span>
+                  <span className="flex items-center gap-1 hidden sm:flex">
+                    <ShieldCheck size={14} className="text-emerald-500" />
+                    <span>Verified Schedule</span>
+                  </span>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#F58220] hover:bg-[#e07010] text-white font-bold text-sm shadow-md shadow-[#F58220]/25 transition flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Search size={16} />
+                  <span>Search Kam Air Flights</span>
+                </button>
+              </div>
             </form>
-          </motion.div>
+          )}
+
+          {/* TAB 2: FLIGHT STATUS WIDGET */}
+          {activeTab === "status" && (
+            <form onSubmit={handleStatusSearch} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-end">
+                <div className="sm:col-span-8">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                    Enter Flight Number
+                  </label>
+                  <input
+                    type="text"
+                    value={statusFlightNo}
+                    onChange={(e) => setStatusFlightNo(e.target.value)}
+                    placeholder="e.g. RQ-901 (Dubai) or RQ-101 (Istanbul)"
+                    className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 px-4 py-3 text-sm font-semibold outline-none focus:border-[#F58220] text-gray-900 dark:text-white"
+                  />
+                </div>
+
+                <div className="sm:col-span-4">
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 rounded-xl bg-[#0B1F3A] dark:bg-[#F58220] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Clock size={16} />
+                    <span>Check Live Status</span>
+                  </button>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Track departure time, estimated arrival, boarding gate, and terminal information for today's flights.
+              </p>
+            </form>
+          )}
+
+          {/* TAB 3: AI ASSISTANT WIDGET */}
+          {activeTab === "assistant" && (
+            <form onSubmit={handleAiAssistantSubmit} className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="text"
+                  value={aiQuery}
+                  onChange={(e) => setAiQuery(e.target.value)}
+                  placeholder="Ask anything: baggage allowance, Dubai visa rules, Zamzam water, flight times..."
+                  className="flex-1 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 px-4 py-3 text-sm outline-none focus:border-[#F58220] text-gray-900 dark:text-white"
+                />
+
+                <button
+                  type="submit"
+                  className="px-6 py-3.5 rounded-xl bg-[#F58220] hover:bg-[#e07010] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                >
+                  <Sparkles size={16} />
+                  <span>Ask Assistant</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2 overflow-x-auto text-xs text-gray-500 dark:text-gray-400">
+                <span className="font-semibold text-gray-700 dark:text-gray-300">Try:</span>
+                {["Kabul to Dubai schedule", "Umrah Zamzam allowance", "Baggage for Business"].map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    onClick={() => {
+                      setAiQuery(chip);
+                      navigate(`/assistant?q=${encodeURIComponent(chip)}`);
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-white/10 hover:text-[#F58220] transition whitespace-nowrap cursor-pointer"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            </form>
+          )}
         </motion.div>
 
-        {/* RIGHT SIDE 3D */}
+        {/* Feature Highlights Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 text-center">
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <h4 className="font-black text-xl text-[#F58220]">30 kg + 7 kg</h4>
+            <p className="text-xs text-gray-300">Generous Economy Baggage</p>
+          </div>
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <h4 className="font-black text-xl text-amber-400">5 Liters</h4>
+            <p className="text-xs text-gray-300">Complimentary Zamzam Water</p>
+          </div>
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <h4 className="font-black text-xl text-white">Daily Flights</h4>
+            <p className="text-xs text-gray-300">Kabul ↔ Dubai & Istanbul</p>
+          </div>
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <h4 className="font-black text-xl text-emerald-400">24/7 AI Desk</h4>
+            <p className="text-xs text-gray-300">Instant Passenger Support</p>
+          </div>
+        </div>
 
-        <motion.div
-          initial={{
-            opacity: 0,
-            scale: 0.8,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-          transition={{
-            duration: 1,
-          }}
-          className="
-        relative
-
-        flex
-
-        justify-center
-
-        "
-        >
-          {/* Glow */}
-
-          <div
-            className="
-        absolute
-
-        h-[300px]
-
-        w-[300px]
-
-        sm:h-[450px]
-
-        sm:w-[450px]
-
-        rounded-full
-
-        bg-gradient-to-br
-
-        from-cyan-300
-
-        to-purple-300
-
-        blur-3xl
-
-        opacity-40
-        "
-          />
-
-          {/* 3D Illustration */}
-
-          <motion.img
-            src={travel3D}
-            alt="3D Travel Illustration"
-            animate={{
-              y: [0, -20, 0],
-
-              rotate: [0, 2, -2, 0],
-            }}
-            transition={{
-              duration: 6,
-
-              repeat: Infinity,
-
-              ease: "easeInOut",
-            }}
-            className="
-        relative
-
-        z-10
-
-        w-[280px]
-
-        sm:w-[400px]
-
-        lg:w-[500px]
-
-        drop-shadow-2xl
-        "
-          />
-
-          {/* Weather Card */}
-
-          <motion.div
-            animate={{
-              y: [0, -15, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-            }}
-            className="
-        absolute
-
-        top-10
-
-        left-0
-
-        z-20
-
-        rounded-3xl
-
-        bg-white/90
-
-        backdrop-blur-xl
-
-        p-4
-
-        shadow-xl
-        "
-          >
-            <CloudSun />
-
-            <p className="font-bold">25°C</p>
-
-            <p className="text-xs text-gray-500">Perfect weather</p>
-          </motion.div>
-
-          {/* Budget Card */}
-
-          <motion.div
-            animate={{
-              y: [0, 15, 0],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-            }}
-            className="
-        absolute
-
-        bottom-10
-
-        right-0
-
-        z-20
-
-        rounded-3xl
-
-        bg-white
-
-        p-4
-
-        shadow-xl
-        "
-          >
-            <Wallet />
-
-            <p className="font-bold">$1200</p>
-
-            <p className="text-xs text-gray-500">Trip Budget</p>
-          </motion.div>
-
-          {/* Destination Card */}
-
-          <motion.div
-            animate={{
-              x: [0, 10, 0],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-            }}
-            className="
-        absolute
-
-        top-1/2
-
-        right-0
-
-        z-20
-
-        rounded-3xl
-
-        bg-white
-
-        p-4
-
-        shadow-xl
-        "
-          >
-            <MapPinned size={20} />
-
-            <p className="font-bold">Tokyo</p>
-
-            <p className="text-xs text-gray-500">Next adventure</p>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   );
 }
-
-export default Hero;
