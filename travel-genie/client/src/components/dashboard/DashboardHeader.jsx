@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Search,
-  Crown,
   Menu,
   User,
   Settings,
@@ -11,6 +10,9 @@ import {
   ChevronDown,
   BarChart3,
   Plane,
+  Ticket,
+  Clock,
+  Sparkles,
 } from "lucide-react";
 
 import ThemeSwitcher from "../Common/ThemeSwitcher";
@@ -46,17 +48,17 @@ function DashboardHeader({ openSidebar }) {
     user?.username ||
     user?.profile?.user?.username ||
     user?.email?.split("@")[0] ||
-    "Explorer";
+    "Passenger";
 
   const email = user?.email || user?.profile?.user?.email || "";
-  const initial = (username.charAt(0) || "U").toUpperCase();
+  const initial = (username.charAt(0) || "P").toUpperCase();
   const isAdmin = Boolean(user?.is_staff || user?.is_superuser);
 
   const profileImage = user?.profile?.profile_image;
   const avatarUrl = profileImage
     ? profileImage.startsWith("http")
       ? profileImage
-      : `https://travelgenie-backend-fcvw.onrender.com${profileImage}`
+      : `http://127.0.0.1:8000${profileImage}`
     : null;
 
   return (
@@ -65,15 +67,15 @@ function DashboardHeader({ openSidebar }) {
         w-full
         flex
         items-center
-        gap-4
-        mb-8
+        gap-3
+        mb-6
         flex-wrap
         lg:flex-nowrap
         relative
         z-30
       "
     >
-      {/* Mobile Menu */}
+      {/* Mobile Menu Toggle */}
       <button
         type="button"
         onClick={openSidebar}
@@ -86,7 +88,7 @@ function DashboardHeader({ openSidebar }) {
           flex
           items-center
           justify-center
-          bg-white/70
+          bg-white/80
           dark:bg-white/10
           border
           border-gray-200
@@ -101,46 +103,49 @@ function DashboardHeader({ openSidebar }) {
         "
         aria-label="Open sidebar"
       >
-        <Menu size={22} />
+        <Menu size={20} />
       </button>
 
-      {/* Upgrade Pro */}
-      <button
+      {/* Book Flight CTA Button */}
+      <Link
+        to="/dashboard/flights"
         className="
           flex
           items-center
           gap-2
           rounded-2xl
-          px-5
-          py-3
+          px-4
+          py-2.5
           bg-gradient-to-r
-          from-cyan-500
-          to-blue-600
+          from-amber-500
+          to-[#F58220]
           text-white
-          text-sm
-          font-medium
+          text-xs
+          font-bold
           shadow-lg
+          shadow-[#F58220]/25
           transition-all
           duration-300
           hover:scale-105
+          shrink-0
         "
       >
-        <Crown size={18} />
-        <span className="hidden sm:block">Upgrade Pro</span>
-      </button>
+        <Plane size={16} className="transform -rotate-45" />
+        <span className="hidden sm:inline">Book Flights</span>
+      </Link>
 
-      {/* Search */}
-      <div className="flex-1 min-w-[220px]">
+      {/* Flight Search / Global Query */}
+      <div className="flex-1 min-w-[200px]">
         <div className="relative w-full">
           <Search
-            size={20}
+            size={18}
             className="
               absolute
-              left-5
+              left-4
               top-1/2
               -translate-y-1/2
-              text-gray-500
-              dark:text-white
+              text-gray-400
+              dark:text-white/60
               z-10
             "
           />
@@ -149,15 +154,20 @@ function DashboardHeader({ openSidebar }) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search destinations, trips, memories..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && search.trim()) {
+                navigate(`/dashboard/assistant?q=${encodeURIComponent(search.trim())}`);
+              }
+            }}
+            placeholder="Search Kam Air flights, destinations, visa rules..."
             className="
               w-full
               rounded-2xl
-              px-5
-              py-3
-              pl-12
-              text-sm
-              bg-white/70
+              px-4
+              py-2.5
+              pl-11
+              text-xs
+              bg-white/80
               dark:bg-white/10
               border
               border-gray-200
@@ -165,13 +175,14 @@ function DashboardHeader({ openSidebar }) {
               text-gray-800
               dark:text-white
               placeholder:text-gray-400
-              dark:placeholder:text-white/50
+              dark:placeholder:text-white/40
               backdrop-blur-xl
               outline-none
               transition-all
-              duration-300
+              duration-200
               focus:ring-2
-              focus:ring-cyan-400
+              focus:ring-[#F58220]
+              focus:border-transparent
             "
           />
         </div>
@@ -195,50 +206,51 @@ function DashboardHeader({ openSidebar }) {
             p-1
             pr-3
             rounded-full
-            bg-white/70
+            bg-white/80
             dark:bg-white/10
             border
             border-gray-200
             dark:border-white/10
             backdrop-blur-xl
-            hover:border-cyan-400
+            hover:border-[#F58220]
             transition-all
-            duration-300
+            duration-200
             shadow-sm
+            cursor-pointer
           "
         >
           {avatarUrl ? (
             <img
               src={avatarUrl}
               alt={username}
-              className="h-9 w-9 rounded-full object-cover"
+              className="h-8 w-8 rounded-full object-cover"
             />
           ) : (
             <div
               className="
-                h-9
-                w-9
+                h-8
+                w-8
                 rounded-full
                 flex
                 items-center
                 justify-center
-                bg-gradient-to-r
-                from-cyan-500
-                to-blue-600
+                bg-gradient-to-tr
+                from-[#F58220]
+                to-amber-500
                 text-white
-                text-sm
+                text-xs
                 font-bold
-                shadow-md
+                shadow-sm
               "
             >
               {initial}
             </div>
           )}
-          <span className="hidden md:block text-sm font-semibold text-gray-800 dark:text-white max-w-[100px] truncate">
+          <span className="hidden md:block text-xs font-bold text-gray-800 dark:text-white max-w-[100px] truncate">
             {username}
           </span>
           <ChevronDown
-            size={16}
+            size={14}
             className={`text-gray-500 dark:text-gray-300 transition-transform duration-200 ${
               menuOpen ? "rotate-180" : ""
             }`}
@@ -252,7 +264,7 @@ function DashboardHeader({ openSidebar }) {
               absolute
               right-0
               mt-2
-              w-64
+              w-60
               rounded-2xl
               bg-white/95
               dark:bg-[#071625]/95
@@ -270,19 +282,19 @@ function DashboardHeader({ openSidebar }) {
             "
           >
             {/* User Info Header */}
-            <div className="px-3 py-2.5 border-b border-gray-100 dark:border-white/10">
+            <div className="px-3 py-2 border-b border-gray-100 dark:border-white/10">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
+                <p className="text-xs font-bold text-gray-900 dark:text-white truncate">
                   {username}
                 </p>
                 {isAdmin && (
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                  <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                     Admin
                   </span>
                 )}
               </div>
               {email && (
-                <p className="text-xs text-gray-500 dark:text-white/60 truncate mt-0.5">
+                <p className="text-[11px] text-gray-400 dark:text-white/60 truncate mt-0.5">
                   {email}
                 </p>
               )}
@@ -290,6 +302,76 @@ function DashboardHeader({ openSidebar }) {
 
             {/* Menu Items */}
             <div className="py-1">
+              <Link
+                to="/dashboard/flights"
+                onClick={() => setMenuOpen(false)}
+                className="
+                  flex
+                  items-center
+                  gap-2.5
+                  px-3
+                  py-2
+                  rounded-xl
+                  text-xs
+                  font-medium
+                  text-gray-700
+                  dark:text-white/80
+                  hover:bg-amber-500/10
+                  hover:text-[#F58220]
+                  transition-colors
+                "
+              >
+                <Plane size={15} className="text-[#F58220]" />
+                <span>Book a Flight</span>
+              </Link>
+
+              <Link
+                to="/dashboard/my-trip"
+                onClick={() => setMenuOpen(false)}
+                className="
+                  flex
+                  items-center
+                  gap-2.5
+                  px-3
+                  py-2
+                  rounded-xl
+                  text-xs
+                  font-medium
+                  text-gray-700
+                  dark:text-white/80
+                  hover:bg-amber-500/10
+                  hover:text-[#F58220]
+                  transition-colors
+                "
+              >
+                <Ticket size={15} className="text-[#F58220]" />
+                <span>My E-Tickets</span>
+              </Link>
+
+              {isAdmin && (
+                <Link
+                  to="/dashboard/kam-air-analytics"
+                  onClick={() => setMenuOpen(false)}
+                  className="
+                    flex
+                    items-center
+                    gap-2.5
+                    px-3
+                    py-2
+                    rounded-xl
+                    text-xs
+                    font-semibold
+                    text-amber-600
+                    dark:text-amber-400
+                    hover:bg-amber-500/10
+                    transition-colors
+                  "
+                >
+                  <BarChart3 size={15} />
+                  <span>Executive Analytics</span>
+                </Link>
+              )}
+
               {isAdmin && (
                 <a
                   href="http://127.0.0.1:8000/admin/"
@@ -301,41 +383,20 @@ function DashboardHeader({ openSidebar }) {
                     items-center
                     gap-2.5
                     px-3
-                    py-2.5
+                    py-2
                     rounded-xl
-                    text-sm
-                    text-cyan-600
-                    dark:text-cyan-400
-                    hover:bg-cyan-500/10
+                    text-xs
+                    font-medium
+                    text-gray-600
+                    dark:text-gray-400
+                    hover:bg-gray-100
+                    dark:hover:bg-white/10
                     transition-colors
                   "
                 >
-                  <ShieldCheck size={17} />
+                  <ShieldCheck size={15} className="text-emerald-500" />
                   <span>Django Admin</span>
                 </a>
-              )}
-
-              {isAdmin && (
-                <Link
-                  to="/dashboard/kam-air-analytics"
-                  onClick={() => setMenuOpen(false)}
-                  className="
-                    flex
-                    items-center
-                    gap-2.5
-                    px-3
-                    py-2.5
-                    rounded-xl
-                    text-sm
-                    text-amber-600
-                    dark:text-amber-400
-                    hover:bg-amber-500/10
-                    transition-colors
-                  "
-                >
-                  <BarChart3 size={17} />
-                  <span>Kam Air Analytics</span>
-                </Link>
               )}
 
               <Link
@@ -346,9 +407,10 @@ function DashboardHeader({ openSidebar }) {
                   items-center
                   gap-2.5
                   px-3
-                  py-2.5
+                  py-2
                   rounded-xl
-                  text-sm
+                  text-xs
+                  font-medium
                   text-gray-700
                   dark:text-white/80
                   hover:bg-gray-100
@@ -356,8 +418,8 @@ function DashboardHeader({ openSidebar }) {
                   transition-colors
                 "
               >
-                <User size={17} />
-                <span>My Profile</span>
+                <User size={15} />
+                <span>Passenger Profile</span>
               </Link>
 
               <Link
@@ -368,9 +430,10 @@ function DashboardHeader({ openSidebar }) {
                   items-center
                   gap-2.5
                   px-3
-                  py-2.5
+                  py-2
                   rounded-xl
-                  text-sm
+                  text-xs
+                  font-medium
                   text-gray-700
                   dark:text-white/80
                   hover:bg-gray-100
@@ -378,8 +441,8 @@ function DashboardHeader({ openSidebar }) {
                   transition-colors
                 "
               >
-                <Settings size={17} />
-                <span>Settings</span>
+                <Settings size={15} />
+                <span>Preferences</span>
               </Link>
             </div>
 
@@ -394,19 +457,20 @@ function DashboardHeader({ openSidebar }) {
                   items-center
                   gap-2.5
                   px-3
-                  py-2.5
+                  py-2
                   rounded-xl
-                  text-sm
-                  font-medium
+                  text-xs
+                  font-semibold
                   text-red-500
                   hover:bg-red-500/10
                   dark:text-red-400
                   dark:hover:bg-red-500/10
                   transition-colors
+                  cursor-pointer
                 "
               >
-                <LogOut size={17} />
-                <span>Log Out</span>
+                <LogOut size={15} />
+                <span>Sign Out</span>
               </button>
             </div>
           </div>

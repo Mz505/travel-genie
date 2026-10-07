@@ -59,7 +59,7 @@ function DashboardLayout() {
           w-[500px]
           h-[500px]
           rounded-full
-          bg-cyan-400/20
+          bg-[#F58220]/15
           blur-[160px]
         "
       />
@@ -72,7 +72,7 @@ function DashboardLayout() {
           w-[450px]
           h-[450px]
           rounded-full
-          bg-blue-500/20
+          bg-[#0B1F3A]/40
           blur-[150px]
         "
       />

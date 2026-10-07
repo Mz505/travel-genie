@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/home/Footer";
 import {
@@ -23,6 +23,8 @@ import autoTable from "jspdf-autotable";
 
 export default function MyTripsPage() {
   const { user } = useAuth();
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith("/dashboard");
   const [pnrInput, setPnrInput] = useState("");
   const [bookings, setBookings] = useState([]);
   const [searchedBooking, setSearchedBooking] = useState(null);
@@ -217,10 +219,10 @@ export default function MyTripsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] dark:bg-[#07111F] text-[#172033] dark:text-white flex flex-col transition-colors">
-      <Navbar />
+    <div className={isDashboard ? "w-full text-[#172033] dark:text-white" : "min-h-screen bg-[#F5F7FA] dark:bg-[#07111F] text-[#172033] dark:text-white flex flex-col transition-colors"}>
+      {!isDashboard && <Navbar />}
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      <main className={isDashboard ? "w-full space-y-8" : "flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8"}>
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -379,7 +381,7 @@ export default function MyTripsPage() {
         </div>
       )}
 
-      <Footer />
+      {!isDashboard && <Footer />}
     </div>
   );
 }

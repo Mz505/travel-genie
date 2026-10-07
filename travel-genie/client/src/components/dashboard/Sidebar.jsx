@@ -4,15 +4,18 @@ import { useAuth } from "../../context/AuthContext";
 import {
   LayoutDashboard,
   Plane,
+  Clock,
+  Sparkles,
+  Ticket,
   Map,
   Wallet,
-  Sparkles,
   Brain,
   User,
   Settings,
   LogOut,
   ShieldCheck,
   BarChart3,
+  ExternalLink,
 } from "lucide-react";
 
 const menuItems = [
@@ -23,12 +26,27 @@ const menuItems = [
     end: true,
   },
   {
-    name: "Kam Air Flights",
+    name: "Book Flights",
     path: "/dashboard/flights",
     icon: Plane,
   },
   {
-    name: "Trips",
+    name: "Flight Status",
+    path: "/dashboard/flight-status",
+    icon: Clock,
+  },
+  {
+    name: "AI Concierge",
+    path: "/dashboard/assistant",
+    icon: Sparkles,
+  },
+  {
+    name: "My E-Tickets",
+    path: "/dashboard/my-trip",
+    icon: Ticket,
+  },
+  {
+    name: "Trip Plans",
     path: "/dashboard/trips",
     icon: Map,
   },
@@ -38,12 +56,7 @@ const menuItems = [
     icon: Wallet,
   },
   {
-    name: "Recommendations",
-    path: "/dashboard/recommendations",
-    icon: Sparkles,
-  },
-  {
-    name: "Memory",
+    name: "Memories",
     path: "/dashboard/memory",
     icon: Brain,
   },
@@ -68,40 +81,42 @@ function Sidebar({ close }) {
         z-50
         top-6
         left-6
-        w-[240px]
+        w-[248px]
         h-[calc(100vh-48px)]
         rounded-[28px]
         p-5
         flex
         flex-col
-        bg-white/80
-        dark:bg-[#071625]/80
+        bg-white/90
+        dark:bg-[#071625]/90
         backdrop-blur-3xl
         border
         border-gray-200
         dark:border-white/10
-        shadow-xl
+        shadow-2xl
         transition-all
         duration-300
       "
     >
-      {/* Logo */}
-      <div className="flex items-center justify-between">
-        <h1
-          className="
-            text-2xl
-            font-bold
-            bg-gradient-to-r
-            from-cyan-400
-            to-blue-600
-            bg-clip-text
-            text-transparent
-          "
-        >
-          TravelGenie
-        </h1>
+      {/* Brand Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-white/10">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#F58220] to-amber-500 flex items-center justify-center text-white shadow-md shadow-[#F58220]/25">
+            <Plane size={18} className="transform -rotate-45" />
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-lg font-black tracking-tight text-[#0B1F3A] dark:text-white">
+                KAM<span className="text-[#F58220]">AIR</span>
+              </span>
+            </div>
+            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-white/40">
+              Passenger Portal
+            </div>
+          </div>
+        </div>
         {isAdmin && (
-          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
             Admin
           </span>
         )}
@@ -110,10 +125,11 @@ function Sidebar({ close }) {
       {/* Main Menu */}
       <nav
         className="
-          mt-6
+          mt-4
           flex-1
           space-y-1
           overflow-y-auto
+          pr-1
         "
       >
         {menuItems.map((item) => {
@@ -130,22 +146,23 @@ function Sidebar({ close }) {
                   flex
                   items-center
                   gap-3
-                  px-4
-                  py-3
+                  px-3.5
+                  py-2.5
                   rounded-xl
-                  text-sm
+                  text-xs
+                  font-semibold
                   transition-all
-                  duration-300
+                  duration-200
                   hover:translate-x-1
                   ${
                     isActive
-                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                      : "text-gray-700 hover:bg-gray-100 dark:text-white/70 dark:hover:bg-white/10"
+                      ? "bg-gradient-to-r from-amber-500 to-[#F58220] text-white shadow-md shadow-[#F58220]/25"
+                      : "text-gray-700 hover:bg-amber-500/10 hover:text-[#F58220] dark:text-white/75 dark:hover:bg-white/10 dark:hover:text-white"
                   }
                 `
               }
             >
-              <Icon size={18} />
+              <Icon size={17} />
               <span>{item.name}</span>
             </NavLink>
           );
@@ -155,7 +172,7 @@ function Sidebar({ close }) {
       {/* Divider */}
       <div
         className="
-          my-3
+          my-2.5
           border-t
           border-gray-200
           dark:border-white/10
@@ -163,32 +180,35 @@ function Sidebar({ close }) {
       />
 
       {/* Account Menu */}
-      <div className="space-y-1">
+      <div className="space-y-1 pt-1">
         {isAdmin && (
           <>
             <NavLink
               to="/dashboard/kam-air-analytics"
               onClick={() => close && close()}
               className={({ isActive }) =>
-                `w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-300 hover:translate-x-1 ${
+                `w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 hover:translate-x-1 ${
                   isActive
-                    ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md"
                     : "text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
                 }`
               }
             >
-              <BarChart3 size={18} />
-              <span>Kam Air Analytics</span>
+              <BarChart3 size={16} />
+              <span>Executive Analytics</span>
             </NavLink>
 
             <a
               href="http://127.0.0.1:8000/admin/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all duration-300 hover:translate-x-1 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/10 border border-cyan-500/20 mb-1"
+              className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 hover:translate-x-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 mb-1"
             >
-              <ShieldCheck size={16} />
-              <span>Django Portal</span>
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={14} className="text-[#F58220]" />
+                <span>Django Admin</span>
+              </div>
+              <ExternalLink size={12} />
             </a>
           </>
         )}
@@ -202,23 +222,24 @@ function Sidebar({ close }) {
               flex
               items-center
               gap-3
-              px-4
-              py-2.5
+              px-3.5
+              py-2
               rounded-xl
-              text-sm
+              text-xs
+              font-semibold
               transition-all
-              duration-300
+              duration-200
               hover:translate-x-1
               ${
                 isActive
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                  : "text-gray-700 hover:bg-gray-100 dark:text-white/70 dark:hover:bg-white/10"
+                  ? "bg-gradient-to-r from-amber-500 to-[#F58220] text-white shadow-md"
+                  : "text-gray-700 hover:bg-gray-100 dark:text-white/75 dark:hover:bg-white/10"
               }
             `
           }
         >
-          <User size={18} />
-          <span>Profile</span>
+          <User size={16} />
+          <span>Passenger Profile</span>
         </NavLink>
 
         <NavLink
@@ -230,23 +251,24 @@ function Sidebar({ close }) {
               flex
               items-center
               gap-3
-              px-4
-              py-2.5
+              px-3.5
+              py-2
               rounded-xl
-              text-sm
+              text-xs
+              font-semibold
               transition-all
-              duration-300
+              duration-200
               hover:translate-x-1
               ${
                 isActive
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                  : "text-gray-700 hover:bg-gray-100 dark:text-white/70 dark:hover:bg-white/10"
+                  ? "bg-gradient-to-r from-amber-500 to-[#F58220] text-white shadow-md"
+                  : "text-gray-700 hover:bg-gray-100 dark:text-white/75 dark:hover:bg-white/10"
               }
             `
           }
         >
-          <Settings size={18} />
-          <span>Settings</span>
+          <Settings size={16} />
+          <span>Preferences</span>
         </NavLink>
 
         <button
@@ -257,22 +279,23 @@ function Sidebar({ close }) {
             flex
             items-center
             gap-3
-            px-4
-            py-2.5
+            px-3.5
+            py-2
             rounded-xl
-            text-sm
-            font-medium
+            text-xs
+            font-semibold
             transition-all
-            duration-300
+            duration-200
             hover:translate-x-1
             text-red-500
             hover:bg-red-500/10
             dark:text-red-400
             dark:hover:bg-red-500/10
+            cursor-pointer
           "
         >
-          <LogOut size={18} />
-          <span>Log Out</span>
+          <LogOut size={16} />
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Plane,
   Clock,
@@ -26,6 +26,8 @@ import GlassCard from "../../components/Common/GlassCard";
 
 export default function FlightSearchPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith("/dashboard");
   const { formatPrice, t } = useLocalization();
 
   const [searchParams, setSearchParams] = useState({
@@ -58,11 +60,11 @@ export default function FlightSearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#07111F] text-gray-900 dark:text-white transition-colors duration-300 flex flex-col">
-      <Navbar />
+    <div className={isDashboard ? "w-full text-gray-900 dark:text-white" : "min-h-screen bg-gray-50 dark:bg-[#07111F] text-gray-900 dark:text-white transition-colors duration-300 flex flex-col"}>
+      {!isDashboard && <Navbar />}
 
       {/* Main Container */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className={isDashboard ? "w-full space-y-8" : "flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8"}>
         {/* Title Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
@@ -241,7 +243,7 @@ export default function FlightSearchPage() {
         />
       )}
 
-      <Footer />
+      {!isDashboard && <Footer />}
     </div>
   );
 }

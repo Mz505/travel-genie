@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, useLocation, Link } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/home/Footer";
 import { Plane, Search, Clock, MapPin, AlertCircle, CheckCircle2, ShieldAlert, RefreshCw } from "lucide-react";
@@ -7,6 +7,8 @@ import { KAM_AIR_SCHEDULES, KAM_AIR_CITIES } from "../../data/kamAirRoutes";
 
 export default function FlightStatusPage() {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith("/dashboard");
   const initialFlight = searchParams.get("flight") || "";
 
   const [flightNumber, setFlightNumber] = useState(initialFlight);
@@ -80,10 +82,10 @@ export default function FlightStatusPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] dark:bg-[#07111F] text-[#172033] dark:text-white flex flex-col transition-colors">
-      <Navbar />
+    <div className={isDashboard ? "w-full text-[#172033] dark:text-white" : "min-h-screen bg-[#F5F7FA] dark:bg-[#07111F] text-[#172033] dark:text-white flex flex-col transition-colors"}>
+      {!isDashboard && <Navbar />}
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      <main className={isDashboard ? "w-full space-y-8" : "flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8"}>
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -301,7 +303,7 @@ export default function FlightStatusPage() {
         </div>
       </main>
 
-      <Footer />
+      {!isDashboard && <Footer />}
     </div>
   );
 }

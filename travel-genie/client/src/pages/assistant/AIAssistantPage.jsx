@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/home/Footer";
 import {
@@ -21,6 +21,8 @@ import api from "../../api/axios";
 
 export default function AIAssistantPage() {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith("/dashboard");
   const initialQuery = searchParams.get("q") || "";
 
   const [messages, setMessages] = useState([
@@ -122,10 +124,10 @@ export default function AIAssistantPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] dark:bg-[#07111F] text-[#172033] dark:text-white flex flex-col transition-colors">
-      <Navbar />
+    <div className={isDashboard ? "w-full text-[#172033] dark:text-white" : "min-h-screen bg-[#F5F7FA] dark:bg-[#07111F] text-[#172033] dark:text-white flex flex-col transition-colors"}>
+      {!isDashboard && <Navbar />}
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col space-y-4">
+      <main className={isDashboard ? "w-full space-y-4" : "flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col space-y-4"}>
         
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-gray-200 dark:border-white/10">
@@ -271,7 +273,7 @@ export default function AIAssistantPage() {
         </div>
       </main>
 
-      <Footer />
+      {!isDashboard && <Footer />}
     </div>
   );
 }
