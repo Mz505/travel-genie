@@ -68,7 +68,6 @@ function DashboardHeader({ openSidebar }) {
         flex
         items-center
         gap-3
-        mb-6
         flex-wrap
         lg:flex-nowrap
         relative

@@ -220,34 +220,37 @@ function HeroCard() {
 
   if (!heroTrip) {
     return (
-      <div className="relative h-full min-h-[220px] overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-500 via-blue-600 to-purple-700 p-5 text-white sm:p-6">
-        <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+      <div className="relative h-full min-h-[220px] overflow-hidden rounded-3xl bg-gradient-to-br from-[#0B1F3A] via-[#122A4E] to-[#F58220]/80 p-5 text-white sm:p-6 shadow-xl border border-white/10">
+        <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[#F58220]/20 blur-3xl" />
 
-        <div className="absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
+        <div className="absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-amber-400/15 blur-3xl" />
 
-        <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-1 py-1.5 text-sm font-medium backdrop-blur-md">
-            <Sparkles size={14} />
-            Welcome to TravelGenie
+        <div className="relative z-10 flex flex-col justify-between h-full">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/15 px-3 py-1 text-xs font-bold text-amber-300 backdrop-blur-md">
+              <Sparkles size={13} />
+              <span>Kam Air Passenger Portal</span>
+            </div>
+
+            <h1 className="mt-3 text-lg sm:text-xl font-black text-white">
+              Your next journey starts here ✈️
+            </h1>
+
+            <p className="mt-1 text-xs text-white/80 line-clamp-2">
+              Explore verified flights connecting Kabul to Dubai, Istanbul, Jeddah, Delhi, and domestic destinations.
+            </p>
           </div>
 
-          <h1 className="mt-4 max-w-2xl text-1xl font-bold sm:text-1.5xl">
-            Your next adventure starts here ✈️
-          </h1>
-
-          <p className="mt-2 max-w-la text-white/80">
-            Create a trip and let TravelGenie help you plan an unforgettable
-            journey.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => navigate("/dashboard/create-trip")}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-medium text-cyan-600 transition hover:scale-105"
-          >
-            Plan a Trip
-            <ArrowRight size={18} />
-          </button>
+          <div className="pt-4">
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard/flights")}
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-[#F58220] hover:brightness-110 px-4 py-2.5 text-xs font-bold text-white transition-all shadow-md shadow-[#F58220]/30 hover:scale-105 cursor-pointer"
+            >
+              <span>Book a Flight</span>
+              <ArrowRight size={14} />
+            </button>
+          </div>
         </div>
       </div>
     );
