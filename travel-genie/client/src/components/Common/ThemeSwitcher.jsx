@@ -1,83 +1,44 @@
-import { Sun, Moon, Monitor } from "lucide-react";
-
+import { Sun, Moon } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
 function ThemeSwitcher() {
   const { theme, changeTheme } = useTheme();
+  const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  const toggleTheme = () => {
+    changeTheme(isDark ? "light" : "dark");
+  };
 
   return (
-    <div
+    <button
+      type="button"
+      onClick={toggleTheme}
       className="
-      flex
-      items-center
-      gap-1
-
-      rounded-full
-
-      bg-white/10
-
-      backdrop-blur-xl
-
-      border
-      border-white/10
-
-      p-1
+        p-2
+        rounded-xl
+        bg-white/10
+        border
+        border-white/15
+        text-white/80
+        hover:text-white
+        hover:border-[#F58220]
+        transition
+        duration-200
+        cursor-pointer
+        flex
+        items-center
+        justify-center
+        shrink-0
       "
+      title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
+      aria-label="Toggle theme"
     >
-      <button
-        onClick={() => changeTheme("light")}
-        className={`
-        p-2
-        rounded-full
-        transition-all
-        duration-300
-
-        ${
-          theme === "light"
-            ? "bg-cyan-500 text-white shadow-lg"
-            : "text-white/60 hover:bg-white/10"
-        }
-      `}
-      >
-        <Sun size={18} />
-      </button>
-
-      <button
-        onClick={() => changeTheme("dark")}
-        className={`
-        p-2
-        rounded-full
-        transition-all
-        duration-300
-
-        ${
-          theme === "dark"
-            ? "bg-cyan-500 text-white shadow-lg"
-            : "text-white/60 hover:bg-white/10"
-        }
-      `}
-      >
-        <Moon size={18} />
-      </button>
-
-      <button
-        onClick={() => changeTheme("system")}
-        className={`
-        p-2
-        rounded-full
-        transition-all
-        duration-300
-
-        ${
-          theme === "system"
-            ? "bg-cyan-500 text-white shadow-lg"
-            : "text-white/60 hover:bg-white/10"
-        }
-      `}
-      >
-        <Monitor size={18} />
-      </button>
-    </div>
+      {isDark ? (
+        <Sun size={16} className="text-amber-400 animate-in spin-in-180 duration-300" />
+      ) : (
+        <Moon size={16} className="text-blue-300 animate-in spin-in-180 duration-300" />
+      )}
+    </button>
   );
 }
 

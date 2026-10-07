@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Globe, DollarSign, ChevronDown } from "lucide-react";
+import { Globe, ChevronDown } from "lucide-react";
 import { useLocalization, CURRENCIES, LANGUAGES } from "../../context/LocalizationContext";
 
 export default function CurrencyAndLangSwitcher({ compact = false }) {
@@ -24,24 +24,27 @@ export default function CurrencyAndLangSwitcher({ compact = false }) {
   }, []);
 
   return (
-    <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+    <div className="flex items-center gap-2 shrink-0 whitespace-nowrap">
       {/* Currency Switcher */}
       <div className="relative shrink-0" ref={currRef}>
         <button
           type="button"
-          onClick={() => setCurrOpen(!currOpen)}
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-white/70 dark:bg-white/10 border border-gray-200 dark:border-white/10 text-xs font-bold text-gray-800 dark:text-white backdrop-blur-md hover:border-cyan-400 transition shadow-sm whitespace-nowrap shrink-0"
-          title="Change Currency"
+          onClick={() => {
+            setCurrOpen(!currOpen);
+            setLangOpen(false);
+          }}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs font-semibold text-white hover:border-[#F58220] transition duration-200 cursor-pointer shadow-sm"
+          title="Select Currency"
         >
-          <span className="text-cyan-500 font-extrabold">
+          <span className="text-[#F58220] font-black">
             {CURRENCIES[currency]?.symbol || "$"}
           </span>
           <span>{currency}</span>
-          <ChevronDown size={12} className={`opacity-60 transition ${currOpen ? "rotate-180" : ""}`} />
+          <ChevronDown size={12} className={`opacity-60 transition-transform duration-200 ${currOpen ? "rotate-180" : ""}`} />
         </button>
 
         {currOpen && (
-          <div className="absolute right-0 mt-1.5 w-36 rounded-2xl bg-white/95 dark:bg-[#071625]/95 backdrop-blur-2xl border border-gray-200 dark:border-white/10 shadow-xl p-1.5 z-50">
+          <div className="absolute right-0 mt-2 w-36 rounded-2xl bg-[#0B1F3A] border border-white/15 shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
             {Object.values(CURRENCIES).map((c) => (
               <button
                 key={c.code}
@@ -50,10 +53,10 @@ export default function CurrencyAndLangSwitcher({ compact = false }) {
                   setCurrency(c.code);
                   setCurrOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition cursor-pointer ${
                   currency === c.code
-                    ? "bg-cyan-500 text-white"
-                    : "text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10"
+                    ? "bg-[#F58220] text-white font-bold"
+                    : "text-gray-200 hover:bg-white/10"
                 }`}
               >
                 <span>{c.code}</span>
@@ -68,17 +71,20 @@ export default function CurrencyAndLangSwitcher({ compact = false }) {
       <div className="relative shrink-0" ref={langRef}>
         <button
           type="button"
-          onClick={() => setLangOpen(!langOpen)}
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-white/70 dark:bg-white/10 border border-gray-200 dark:border-white/10 text-xs font-bold text-gray-800 dark:text-white backdrop-blur-md hover:border-cyan-400 transition shadow-sm whitespace-nowrap shrink-0"
-          title="Change Language"
+          onClick={() => {
+            setLangOpen(!langOpen);
+            setCurrOpen(false);
+          }}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs font-semibold text-white hover:border-[#F58220] transition duration-200 cursor-pointer shadow-sm"
+          title="Select Language"
         >
-          <Globe size={13} className="text-cyan-500" />
+          <Globe size={13} className="text-[#F58220]" />
           <span>{LANGUAGES[language]?.nativeName || "EN"}</span>
-          <ChevronDown size={12} className={`opacity-60 transition ${langOpen ? "rotate-180" : ""}`} />
+          <ChevronDown size={12} className={`opacity-60 transition-transform duration-200 ${langOpen ? "rotate-180" : ""}`} />
         </button>
 
         {langOpen && (
-          <div className="absolute right-0 mt-1.5 w-36 rounded-2xl bg-white/95 dark:bg-[#071625]/95 backdrop-blur-2xl border border-gray-200 dark:border-white/10 shadow-xl p-1.5 z-50">
+          <div className="absolute right-0 mt-2 w-36 rounded-2xl bg-[#0B1F3A] border border-white/15 shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
             {Object.values(LANGUAGES).map((l) => (
               <button
                 key={l.code}
@@ -87,10 +93,10 @@ export default function CurrencyAndLangSwitcher({ compact = false }) {
                   setLanguage(l.code);
                   setLangOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition cursor-pointer ${
                   language === l.code
-                    ? "bg-cyan-500 text-white"
-                    : "text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10"
+                    ? "bg-[#F58220] text-white font-bold"
+                    : "text-gray-200 hover:bg-white/10"
                 }`}
               >
                 <span>{l.nativeName}</span>
