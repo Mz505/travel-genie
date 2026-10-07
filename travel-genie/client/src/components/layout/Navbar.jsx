@@ -72,24 +72,24 @@ function Navbar() {
           : "bg-[#0B1F3A] text-white border-b border-white/10"
       }`}
     >
-      <div className="max-w-7xl mx-auto h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto h-20 px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
         
         {/* ================= BRAND LOGO ================= */}
         <Link
           to="/"
           onClick={closeMenu}
-          className="flex items-center gap-3 shrink-0 group py-1"
+          className="flex items-center gap-2 sm:gap-3 shrink-0 group py-1 min-w-0"
         >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#F58220] to-amber-500 flex items-center justify-center text-white shadow-lg shadow-[#F58220]/30 group-hover:scale-105 transition-transform duration-200">
-            <Plane size={22} className="transform -rotate-45" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-[#F58220] to-amber-500 flex items-center justify-center text-white shadow-lg shadow-[#F58220]/30 group-hover:scale-105 transition-transform duration-200 shrink-0">
+            <Plane size={20} className="transform -rotate-45" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-1">
-              <span className="text-2xl font-black tracking-tight text-white leading-none">
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-white leading-none">
                 KAM<span className="text-[#F58220]">AIR</span>
               </span>
             </div>
-            <span className="text-[10px] font-bold tracking-widest text-amber-400 uppercase mt-0.5">
+            <span className="hidden sm:block text-[10px] font-bold tracking-widest text-amber-400 uppercase mt-0.5 truncate">
               AI Passenger Platform
             </span>
           </div>
@@ -181,17 +181,20 @@ function Navbar() {
         </div>
 
         {/* ================= MOBILE TOGGLE & COMPACT UTILS ================= */}
-        <div className="flex items-center gap-2 xl:hidden">
-          <CurrencyAndLangSwitcher />
+        <div className="flex items-center gap-1.5 sm:gap-2 xl:hidden shrink-0">
+          <div className="hidden sm:flex items-center gap-2">
+            <CurrencyAndLangSwitcher />
+          </div>
+
           <ThemeSwitcher />
 
           <button
             type="button"
             onClick={() => setOpen(!open)}
-            className="p-2 rounded-xl bg-white/10 border border-white/15 text-white hover:text-[#F58220] transition duration-200 cursor-pointer"
+            className="p-2 sm:p-2.5 rounded-xl bg-white/10 border border-white/15 text-white hover:text-[#F58220] transition duration-200 cursor-pointer"
             aria-label={open ? "Close menu" : "Open menu"}
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
@@ -204,8 +207,14 @@ function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="xl:hidden bg-[#071625] border-t border-white/10 px-5 py-6 space-y-3 overflow-hidden shadow-2xl"
+            className="xl:hidden bg-[#071625] border-t border-white/10 px-4 sm:px-6 py-5 space-y-4 overflow-hidden shadow-2xl"
           >
+            {/* Quick Currency & Language Selector for Phone View */}
+            <div className="sm:hidden pb-3 border-b border-white/10 flex items-center justify-between gap-2">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Settings</span>
+              <CurrencyAndLangSwitcher />
+            </div>
+
             <div className="space-y-1">
               {navLinks.map((link) => {
                 const active = isActive(link.path);
@@ -230,7 +239,7 @@ function Navbar() {
             </div>
 
             {/* User Auth Controls on Mobile */}
-            <div className="pt-4 mt-2 border-t border-white/10 space-y-2">
+            <div className="pt-3 border-t border-white/10 space-y-2">
               {user ? (
                 <>
                   <Link

@@ -11,30 +11,35 @@ function MobileSidebar({ close }) {
         fixed
         inset-0
         z-50
-        bg-black/40
+        bg-black/60
+        backdrop-blur-sm
+        p-3
+        flex
       "
       onClick={close}
     >
       <motion.div
         initial={{
           x: -300,
+          opacity: 0,
         }}
         animate={{
           x: 0,
+          opacity: 1,
         }}
         exit={{
           x: -300,
+          opacity: 0,
         }}
         transition={{
-          duration: 0.3,
+          duration: 0.25,
         }}
         onClick={(e) => e.stopPropagation()}
         className="
-          absolute
-          left-0
-          top-0
+          relative
           h-full
-          w-[264px]
+          w-[268px]
+          max-w-[85vw]
         "
       >
         <Sidebar close={close} />
@@ -44,12 +49,12 @@ function MobileSidebar({ close }) {
           onClick={close}
           className="
             absolute
-            top-10
-            right-2
+            top-4
+            right-4
             z-[60]
             flex
-            h-10
-            w-10
+            h-8
+            w-8
             items-center
             justify-center
             rounded-xl
@@ -61,10 +66,11 @@ function MobileSidebar({ close }) {
             hover:bg-red-500
             transition-all
             duration-300
+            cursor-pointer
           "
           aria-label="Close sidebar"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
       </motion.div>
     </div>

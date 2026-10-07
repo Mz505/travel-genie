@@ -77,18 +77,20 @@ function Sidebar({ close }) {
   return (
     <aside
       className="
-        fixed
-        z-50
-        top-6
-        left-6
-        w-[248px]
-        h-[calc(100vh-48px)]
+        w-full
+        h-full
+        lg:fixed
+        lg:z-50
+        lg:top-6
+        lg:left-6
+        lg:w-[248px]
+        lg:h-[calc(100vh-48px)]
         rounded-[28px]
         p-5
         flex
         flex-col
-        bg-white/90
-        dark:bg-[#071625]/90
+        bg-white/95
+        dark:bg-[#071625]/95
         backdrop-blur-3xl
         border
         border-gray-200

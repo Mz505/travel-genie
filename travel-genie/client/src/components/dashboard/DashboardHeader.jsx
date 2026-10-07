@@ -134,7 +134,7 @@ function DashboardHeader({ openSidebar }) {
       </Link>
 
       {/* Flight Search / Global Query */}
-      <div className="flex-1 min-w-[200px]">
+      <div className="flex-1 min-w-[130px] sm:min-w-[200px]">
         <div className="relative w-full">
           <Search
             size={18}
@@ -158,7 +158,7 @@ function DashboardHeader({ openSidebar }) {
                 navigate(`/dashboard/assistant?q=${encodeURIComponent(search.trim())}`);
               }
             }}
-            placeholder="Search Kam Air flights, destinations, visa rules..."
+            placeholder="Search flights, destinations, visas..."
             className="
               w-full
               rounded-2xl
@@ -188,7 +188,9 @@ function DashboardHeader({ openSidebar }) {
       </div>
 
       {/* Language & Currency */}
-      <CurrencyAndLangSwitcher />
+      <div className="hidden sm:block">
+        <CurrencyAndLangSwitcher />
+      </div>
 
       {/* Theme */}
       <ThemeSwitcher />

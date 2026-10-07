@@ -56,19 +56,19 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#0B1F3A] text-white py-14 lg:py-20 px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-[#0B1F3A] text-white py-10 sm:py-14 lg:py-20 px-3.5 sm:px-6 lg:px-8">
       {/* Subtle Background Glows */}
       <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#F58220]/15 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10 space-y-12">
+      <div className="max-w-7xl mx-auto relative z-10 space-y-8 sm:space-y-12">
         
         {/* Main Headline & Supporting Text */}
-        <div className="text-center max-w-3xl mx-auto space-y-5">
+        <div className="text-center max-w-3xl mx-auto space-y-4 sm:space-y-5">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F58220]/15 border border-[#F58220]/30 text-[#F58220] text-xs font-bold"
+            className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-[#F58220]/15 border border-[#F58220]/30 text-[#F58220] text-xs font-bold"
           >
             <Plane size={15} className="transform -rotate-45" />
             <span>Official Digital Passenger Platform</span>
@@ -78,7 +78,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]"
+            className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]"
           >
             Your Journey Starts with <span className="text-[#F58220]">Kam Air</span>
           </motion.h1>
@@ -87,7 +87,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed"
+            className="text-sm sm:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed"
           >
             Search flights, manage your journey, check flight information, and get personalized travel assistance in one place.
           </motion.p>
@@ -97,11 +97,11 @@ export default function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-3 pt-2"
+            className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 pt-2"
           >
             <Link
               to="/flights"
-              className="px-6 py-3.5 rounded-xl bg-[#F58220] hover:bg-[#e07010] text-white font-bold text-sm shadow-lg shadow-[#F58220]/30 transition flex items-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#F58220] hover:bg-[#e07010] text-white font-bold text-sm shadow-lg shadow-[#F58220]/30 transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plane size={18} />
               <span>Search Flights</span>
@@ -109,7 +109,7 @@ export default function Hero() {
 
             <Link
               to="/assistant"
-              className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-sm transition flex items-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-sm transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <Sparkles size={18} className="text-amber-400" />
               <span>AI Travel Assistant</span>
@@ -122,47 +122,47 @@ export default function Hero() {
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="max-w-4xl mx-auto rounded-3xl bg-white text-gray-900 dark:bg-[#071625] dark:text-white p-6 sm:p-8 shadow-2xl border border-gray-100 dark:border-white/10"
+          className="max-w-4xl mx-auto rounded-3xl bg-white text-gray-900 dark:bg-[#071625] dark:text-white p-4 sm:p-8 shadow-2xl border border-gray-100 dark:border-white/10"
         >
           {/* Tabs */}
-          <div className="flex items-center gap-2 border-b border-gray-200 dark:border-white/10 pb-4 mb-6 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-2 border-b border-gray-200 dark:border-white/10 pb-3 mb-5 overflow-x-auto no-scrollbar">
             <button
               type="button"
               onClick={() => setActiveTab("flight")}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shrink-0 ${
+              className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 sm:gap-2 cursor-pointer shrink-0 ${
                 activeTab === "flight"
                   ? "bg-[#0B1F3A] text-white dark:bg-[#F58220]"
                   : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
               }`}
             >
-              <Plane size={16} />
+              <Plane size={15} />
               <span>Book Flight</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab("status")}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shrink-0 ${
+              className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 sm:gap-2 cursor-pointer shrink-0 ${
                 activeTab === "status"
                   ? "bg-[#0B1F3A] text-white dark:bg-[#F58220]"
                   : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
               }`}
             >
-              <Clock size={16} />
+              <Clock size={15} />
               <span>Flight Status</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab("assistant")}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shrink-0 ${
+              className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 sm:gap-2 cursor-pointer shrink-0 ${
                 activeTab === "assistant"
                   ? "bg-[#0B1F3A] text-white dark:bg-[#F58220]"
                   : "text-amber-600 dark:text-amber-400 hover:bg-gray-100 dark:hover:bg-white/5"
               }`}
             >
-              <Sparkles size={16} />
-              <span>AI Passenger Concierge</span>
+              <Sparkles size={15} />
+              <span>AI Concierge</span>
             </button>
           </div>
 
@@ -364,22 +364,22 @@ export default function Hero() {
         </motion.div>
 
         {/* Feature Highlights Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 text-center">
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-            <h4 className="font-black text-xl text-[#F58220]">30 kg + 7 kg</h4>
-            <p className="text-xs text-gray-300">Generous Economy Baggage</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pt-4 text-center">
+          <div className="p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <h4 className="font-black text-lg sm:text-xl text-[#F58220]">30 kg + 7 kg</h4>
+            <p className="text-[11px] sm:text-xs text-gray-300">Generous Economy Baggage</p>
           </div>
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-            <h4 className="font-black text-xl text-amber-400">5 Liters</h4>
-            <p className="text-xs text-gray-300">Complimentary Zamzam Water</p>
+          <div className="p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <h4 className="font-black text-lg sm:text-xl text-amber-400">5 Liters</h4>
+            <p className="text-[11px] sm:text-xs text-gray-300">Complimentary Zamzam Water</p>
           </div>
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-            <h4 className="font-black text-xl text-white">Daily Flights</h4>
-            <p className="text-xs text-gray-300">Kabul ↔ Dubai & Istanbul</p>
+          <div className="p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <h4 className="font-black text-lg sm:text-xl text-white">Daily Flights</h4>
+            <p className="text-[11px] sm:text-xs text-gray-300">Kabul ↔ Dubai & Istanbul</p>
           </div>
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-            <h4 className="font-black text-xl text-emerald-400">24/7 AI Desk</h4>
-            <p className="text-xs text-gray-300">Instant Passenger Support</p>
+          <div className="p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <h4 className="font-black text-lg sm:text-xl text-emerald-400">24/7 AI Desk</h4>
+            <p className="text-[11px] sm:text-xs text-gray-300">Instant Passenger Support</p>
           </div>
         </div>
 

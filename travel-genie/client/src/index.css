@@ -52,9 +52,25 @@
   color-scheme: light;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
 html.dark,
 .dark {
   color-scheme: dark;
+}
+
+/* Scrollbar hiding utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Ensure all native select options are clearly readable across all operating systems and browsers */
