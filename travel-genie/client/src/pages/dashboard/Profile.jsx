@@ -28,6 +28,7 @@ import axios from "axios";
 
 import { getProfile } from "../../api/profile";
 import { useAuth } from "../../context/AuthContext";
+import { API_BASE_URL } from "../../api/axios";
 import { useTrips } from "../../context/TripContext.jsx";
 import GlassCard from "../../components/Common/GlassCard";
 
@@ -158,7 +159,7 @@ function Profile() {
     if (profile?.profile_image) {
       const imageUrl = profile.profile_image.startsWith("http")
         ? profile.profile_image
-        : `${import.meta.env.VITE_API_URL}${profile.profile_image}`;
+        : `${API_BASE_URL}${profile.profile_image.startsWith("/") ? "" : "/"}${profile.profile_image}`;
 
       setImagePreview(imageUrl);
     } else {
@@ -245,7 +246,7 @@ function Profile() {
       }
 
       const response = await axios.patch(
-          `${import.meta.env.VITE_API_URL}/api/users/profile/`,
+        `${API_BASE_URL}/api/users/profile/`,
         formData,
         {
           headers: {
@@ -901,7 +902,7 @@ function Profile() {
           <div className="flex items-center gap-3 w-full sm:w-auto">
             {isAdmin && (
               <a
-                href="http://127.0.0.1:8000/admin/"
+                href={`${API_BASE_URL}/admin/`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/20 transition-all"

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
+import { API_BASE_URL } from "../../api/axios";
 import GlassCard from "../../components/Common/GlassCard";
 import ThemeSwitcher from "../../components/Common/ThemeSwitcher";
 
@@ -115,7 +116,7 @@ function Settings() {
 
           {isAdmin && (
             <a
-              href="http://127.0.0.1:8000/admin/"
+              href={`${API_BASE_URL}/admin/`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 px-4 py-2.5 text-sm font-semibold transition"

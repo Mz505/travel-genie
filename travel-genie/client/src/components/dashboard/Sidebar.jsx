@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { API_BASE_URL } from "../../api/axios";
 
 import {
   LayoutDashboard,
@@ -201,7 +202,7 @@ function Sidebar({ close }) {
             </NavLink>
 
             <a
-              href="http://127.0.0.1:8000/admin/"
+              href={`${API_BASE_URL}/admin/`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-xl text-[11px] font-medium transition-all duration-200 hover:translate-x-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 mb-1"

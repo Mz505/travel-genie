@@ -18,6 +18,7 @@ import {
 import ThemeSwitcher from "../Common/ThemeSwitcher";
 import CurrencyAndLangSwitcher from "../Common/CurrencyAndLangSwitcher";
 import { useAuth } from "../../context/AuthContext";
+import { API_BASE_URL } from "../../api/axios";
 
 function DashboardHeader({ openSidebar }) {
   const [search, setSearch] = useState("");
@@ -58,7 +59,7 @@ function DashboardHeader({ openSidebar }) {
   const avatarUrl = profileImage
     ? profileImage.startsWith("http")
       ? profileImage
-      : `http://127.0.0.1:8000${profileImage}`
+      : `${API_BASE_URL}${profileImage.startsWith("/") ? "" : "/"}${profileImage}`
     : null;
 
   return (
@@ -375,7 +376,7 @@ function DashboardHeader({ openSidebar }) {
 
               {isAdmin && (
                 <a
-                  href="http://127.0.0.1:8000/admin/"
+                  href={`${API_BASE_URL}/admin/`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMenuOpen(false)}
