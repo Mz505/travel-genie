@@ -80,7 +80,11 @@ export default function Signup() {
       if (err?.response?.data) {
         const data = err.response.data;
         if (typeof data === "string") {
-          message = data;
+          if (data.includes("<html") || data.includes("<!DOCTYPE") || data.includes("Server Error")) {
+            message = "Backend server error (500). Please ensure database migrations and credentials are configured on Render.";
+          } else {
+            message = data;
+          }
         } else if (data.detail) {
           message = data.detail;
         } else if (data.email) {
